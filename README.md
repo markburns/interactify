@@ -224,6 +224,24 @@ end
 ```
 
 ## FAQs
+- This is ugly isn't it?
+
+```ruby
+class OuterOrganizer
+  # ... boilerplate ...
+  organize \
+    SetupStep,
+    self.each(:ids, 
+      LoadOrder, 
+      ->(c){ byebug if c.order.nil? },
+      DoSomethingWithOrder
+    )
+end
+```
+
+Yes I agree. It's early days and I'm open to syntax improvement ideas. This is really about it being conceptually less ugly than the alternative, which is to jump around between lots of files. In the existing alternative to using this gem the ugliness is not within each individual file, but within the overall hidden architecture and the hunting process of jumping around in complex interactor chains. We can't see that ugliness but we probably experience it. If you don't feel or experience that ugliness then this gem may not be the right fit for you.
+
+
 - Is this interactor/interactor-contracts compatible? 
 Yes and we use them as dependencies. It's possible we'd drop those dependencies in the future but unlikely. I think it's highly likely we'd retain compatibility.
 
