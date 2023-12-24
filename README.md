@@ -27,7 +27,10 @@ class LoadOrder
     context.order = Order.find(context.id)
   end
 end
+```
 
+
+```ruby
 # after
 class LoadOrder
   include Interactify
@@ -54,7 +57,6 @@ organize \
   Thing1, 
   ->(c){ byebug if c.order.nil? },
   Thing2
-```
 ```
 
 ### Each/Iteration
@@ -225,10 +227,6 @@ end
 - Is this interactor/interactor-contracts compatible? 
 Yes and we use them as dependencies. It's possible we'd drop those dependencies in the future but unlikely. I think it's highly likely we'd retain compatibility.
 
-- Is this production ready?
-It's used in production, but it's still early days. 
-There may be minor syntax changes that are proposed in future, but I don't foresee any major changes to how this will be implemented in public API terms.
-We're bound by the interactor/interactor-contracts API, and bound by using it in production.  
 
 - Why not propose changes to the interactor or interactor-contracts gem?
 Honestly, I think both are great and why we've built on top of them. 
