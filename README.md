@@ -306,7 +306,15 @@ If bundler is not being used to manage dependencies, install the gem by executin
 require 'interactify/rspec/matchers'
 
 Interactify.configure do |config|
-  config.root = Rails.root
+  config.root = Rails.root '/app'
+end
+
+Interactify.on_contract_breach do |context, attrs|
+  # maybe add context to Sentry or Honeybadger etc here
+end
+
+Interactify.before_raise do |exception|
+  # maybe add context to Sentry or Honeybadger etc here
 end
 ```
 
