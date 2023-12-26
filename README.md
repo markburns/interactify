@@ -350,7 +350,14 @@ When I've used service objects, I've found them to be more complex to test and c
 I can't see a clean way that using service objects to compose interactors could work well without losing some of the aforementioned benefits.
 
 ### TODO
-We want to add support for explicitly specifying promises in organizers. The benefit here is on clarifying the contract between organizers and interactors.
+We want to add support for explicitly specifying promises in organizers. 
+
+The benefit here is on clarifying the contract between organizers and interactors.
+
+This is another variation of the "interactors themselves are great but their coordination and finding where things happen is hard in large applications".
+
+By adding promise notation to organizers, we can signal to the reader that 'here in this part of the chain is the thing you are looking for'.
+
 A writer of an organizer may expect LoadOrder to promise :order, but for the reader, it's not quite as explicit.
 The expected syntax will be
 
