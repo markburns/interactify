@@ -230,8 +230,8 @@ end
 
 ```
     Missing keys: :order_id
-                        in: AssignOrderToUser
-                       for: PlaceOrder
+              in: AssignOrderToUser
+             for: PlaceOrder
 ```
 
 This allows you to quickly see exactly where you missed assigning something to the context.
