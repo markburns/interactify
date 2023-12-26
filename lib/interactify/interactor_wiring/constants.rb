@@ -4,7 +4,7 @@ module Interactify
       attr_reader :root, :namespace, :organizer_files, :interactor_files
 
       def initialize(root:, namespace:, organizer_files:, interactor_files:)
-        @root = root
+        @root = root.is_a?(Pathname) ? root : Pathname.new(root)
         @namespace = namespace
         @organizer_files = organizer_files
         @interactor_files = interactor_files
@@ -72,7 +72,7 @@ module Interactify
         require filename
 
         underscored_klass_name = underscored_klass_name_without_outer_namespace(filename)
-        underscored_klass_name = trim_rails_folder underscored_klass_name
+        underscored_klass_name = trim_rails_design_pattern_folder underscored_klass_name
 
         klass_name = underscored_klass_name.classify
 
@@ -83,11 +83,9 @@ module Interactify
       end
 
       # Example:
-      # trim_rails_folder("interactors/namespace/sub_namespace/class_name.rb")
+      # trim_rails_folder("app/interactors/namespace/sub_namespace/class_name.rb")
       # => "namespace/sub_namespace/class_name.rb"
-      def trim_rails_folder(filename)
-        rails_folders = Dir.glob(Interactify.root / '*').map { |f| File.basename(f) }
-
+      def trim_rails_design_pattern_folder(filename)
         rails_folders.each do |folder|
           regexable_folder = Regexp.quote("#{folder}/")
           regex = /^#{regexable_folder}/
@@ -97,6 +95,9 @@ module Interactify
 
         filename
       end
+
+      def rails_folders = Dir.glob(root / '*').map { Pathname.new _1 }.select(&:directory?).map { |f| File.basename(f) }
+
 
       # Example:
       # "/home/code/something/app/interactors/namespace/sub_namespace/class_name.rb"

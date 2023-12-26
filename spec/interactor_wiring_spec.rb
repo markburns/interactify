@@ -9,7 +9,7 @@ RSpec.describe Interactify::InteractorWiring do
   end
 
   let(:root) do
-    Pathname.new('./spec/fixtures/dummy_app/')
+    Pathname.new('./spec/fixtures/dummy_app/app/')
   end
 
   before do
@@ -17,7 +17,7 @@ RSpec.describe Interactify::InteractorWiring do
   end
 
   def f(path)
-    File.expand_path("spec/fixtures/dummy_app/#{path}.rb").to_s
+    File.expand_path("spec/fixtures/dummy_app/app/interactors/#{path}.rb").to_s
   end
 
   it 'finds all the interactor files' do
