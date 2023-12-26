@@ -168,20 +168,6 @@ class InnerThing
     end
   end
 end
-
-class DoThingA
-  # ... boilerplate ...
-  def call
-    # ...
-  end
-end
-
-class DoThingB
-  # ... boilerplate ...
-  def call
-    # ...
-  end
-end
 ```
 
 
