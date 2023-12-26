@@ -5,10 +5,10 @@ module Interactify
     def initialize(interactor, promising)
       super <<~MESSAGE.chomp
         #{interactor} does not promise:
-        #{promising}
+        #{promising.map(&:inspect).join(', ')}
 
         Actual promises are:
-        #{interactor.promised_keys}
+        #{interactor.promised_keys.map(&:inspect).join(', ')}
       MESSAGE
     end
   end

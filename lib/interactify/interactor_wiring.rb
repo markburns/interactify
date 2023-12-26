@@ -35,8 +35,8 @@ module Interactify
 
           formatted_errors << <<~ERROR
             Missing keys: #{missing.to_a.map(&:to_sym).map(&:inspect).join(', ')}
-                      in: #{interactor.klass}
-                     for: #{organizer.klass}
+             expected in: #{interactor.klass}
+               called by: #{organizer.klass}
           ERROR
         end
       end

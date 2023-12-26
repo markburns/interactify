@@ -16,7 +16,7 @@ module Interactify
     end
 
     def validate
-      return if args.sort == interactor.promised_keys
+      return if args.sort == interactor.promised_keys.sort
 
       raise MismatchingPromiseError.new(interactor, args)
     end

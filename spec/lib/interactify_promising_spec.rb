@@ -82,10 +82,10 @@ RSpec.describe 'Interactify.promising' do
       }.to raise_error(Interactify::MismatchingPromiseError) do |error|
         expect(error.message).to eq <<~MESSAGE.chomp
           #{k(:B)} does not promise:
-          [:c]
+          :c
 
           Actual promises are:
-          [:b]
+          :b
         MESSAGE
       end
     end
