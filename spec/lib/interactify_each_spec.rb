@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Interactify do
-  it 'has a version number' do
-    expect(Interactify::VERSION).not_to be nil
-  end
-
   describe '.each' do
     module self::SomeNamespace
       A = Class.new do

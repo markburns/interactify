@@ -19,6 +19,12 @@ module Interactify
       Interactify::InteractorWiring.new(root: Interactify.configuration.root, ignore:).validate_app
     end
 
+    def reset
+      @on_contract_breach = nil
+      @before_raise_hook = nil
+      @configuration = nil
+    end
+
     def trigger_contract_breach_hook(...)
       @on_contract_breach&.call(...)
     end
