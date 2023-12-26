@@ -332,10 +332,11 @@ clsas SomeInteractorJob
     SomeInteractor.call(*args)
   end
 end
+```
 
-SomeInteractor.call(*args)
-code is changed to
-SomeInteractorJob.perform_async(*args)
+```diff
+-SomeInteractor.call(*args)
++SomeInteractorJob.perform_async(*args)
 ```
 
 ```ruby
@@ -347,13 +348,21 @@ class SomeInteractor
     # ...
   end
 end
-
-# no need to manually create a job class or handle the perform/call impedance mismatch
-SomeInteractor::Async.call(*args)
-
-# This also makes it easy to add cron jobs to run interactors. As any interactor can be asyncified.
-# By using it's internal Async class.
 ```
+
+No need to manually create a job class or handle the perform/call impedance mismatch
+
+```diff
+-SomeInteractor.call!(*args)
++SomeInteractor::Async.call!(*args)
+```
+
+This also makes it easy to add cron jobs to run interactors. As any interactor can be asyncified.
+By using it's internal Async class.
+
+N.B. as your class is now executing asynchronously you can no longer rely on its promises later on in the chain.
+
+
 
 ## FAQs
 - This is ugly isn't it?
