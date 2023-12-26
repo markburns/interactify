@@ -238,6 +238,14 @@ This allows you to quickly see exactly where you missed assigning something to t
 Combine with lambda debugging `->(ctx) { byebug if ctx.order_id.nil?},` in your chains to drop into the exact
 location in the chain to find where to make the change.
 
+### RSpec matchers
+Easily add [low value, low cost](https://noelrappin.com/blog/2017/02/high-cost-tests-and-high-value-tests/) specs for your expects and promises.
+
+```ruby
+expect(described_class).to expect_inputs(:order_id)
+expect(described_class).to promise_outputs(:order)
+```
+
 ### Sidekiq Jobs
 Sometimes you want to asyncify an interactor.
 
@@ -347,15 +355,9 @@ This will be validated at test time against the interactors promises.
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
-
-Install the gem and add to the application's Gemfile by executing:
-
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
-
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+```Gemfile
+gem 'interactify'
+```
 
 ## Usage
 
