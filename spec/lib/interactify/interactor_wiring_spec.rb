@@ -1,10 +1,7 @@
 RSpec.describe Interactify::InteractorWiring do
   subject do
-    # by default namespace is unnecessary, but allows for isolation of
-    # SpecSupport::DummyOrganizer etc files from the application
     described_class.new(
-      root: File.expand_path(root),
-      namespace: 'SpecSupport'
+      root: File.expand_path(root)
     )
   end
 
@@ -22,6 +19,7 @@ RSpec.describe Interactify::InteractorWiring do
 
   it 'finds all the interactor files' do
     expected = [
+      f('dummy_interactify'),
       f('dummy_interactor_1'),
       f('dummy_interactor_2'),
       f('dummy_interactor_3'),
@@ -37,6 +35,7 @@ RSpec.describe Interactify::InteractorWiring do
   it 'determines the organizer files' do
     expected = [
       f('dummy_organizer'),
+      f('dummy_interactor_interactify_organizer'),
       f('within_namespace/organizer')
     ]
 
@@ -44,14 +43,14 @@ RSpec.describe Interactify::InteractorWiring do
   end
 
   it 'validates the organizers' do
-    callable = subject.organizers.detect { |o| o.klass == SpecSupport::DummyOrganizer }
+    callable = subject.organizers.detect { |o| o.klass == DummyOrganizer }
 
     error_context = callable.validate_callable
     expect(error_context.missing_keys).to eq({})
   end
 
   it 'validates the namespaced organizers' do
-    callable = subject.organizers.detect { |o| o.klass == SpecSupport::WithinNamespace::Organizer }
+    callable = subject.organizers.detect { |o| o.klass == WithinNamespace::Organizer }
     callable.validate_callable
 
     [
