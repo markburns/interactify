@@ -10,6 +10,37 @@ Interactify wraps the interactor and interactor-contracts gem and provides addit
 This is a bells and whistles gem and assumes you are working in a Rails project with Sidekiq.
 However, I'm open to the idea of making it more focused and making these more pluggable.
 
+## Installation
+
+```Gemfile
+gem 'interactify'
+```
+
+## Usage
+
+### Initializer
+```
+# in config/initializers/interactify.rb
+Interactify.configure do |config|
+  # default
+  # config.root = Rails.root / 'app'
+end
+
+Interactify.on_contract_breach do |context, attrs|
+  # maybe add context to Sentry or Honeybadger etc here
+end
+
+Interactify.before_raise do |exception|
+  # maybe add context to Sentry or Honeybadger etc here
+end
+```
+
+### Using the RSpec matchers
+```ruby
+# e.g. in spec/supoort/interactify.rb
+require 'interactify/rspec/matchers'
+```
+
 ### Syntactic Sugar
 - Everything is an Organizer/Interactor and supports interactor-contracts.
 - Concise syntax for most common scenarios with `expects` and `promises`. Verifying the presence of the keys/values.
@@ -395,30 +426,6 @@ organize \
 
 This will be validated at test time against the interactors promises.
 
-## Installation
-
-```Gemfile
-gem 'interactify'
-```
-
-## Usage
-
-```ruby
-# e.g. in spec/supoort/interactify.rb
-require 'interactify/rspec/matchers'
-
-Interactify.configure do |config|
-  config.root = Rails.root '/app'
-end
-
-Interactify.on_contract_breach do |context, attrs|
-  # maybe add context to Sentry or Honeybadger etc here
-end
-
-Interactify.before_raise do |exception|
-  # maybe add context to Sentry or Honeybadger etc here
-end
-```
 
 ## Development
 
