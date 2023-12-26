@@ -5,7 +5,13 @@ However, sometimes in complex interactor chains, the complex debugging happens a
 
 Interactify wraps the interactor and interactor-contract gem and provides additional functionality making chaining and understanding interactor chains easier.
 
+This is a bells and whistles gem and assumes you are working in a Rails project with Sidekiq.
+However, I'm open to the idea of making it more focused and making these more pluggable.
+
 ### Syntactic Sugar
+- Everything is an Organizer/Interactor and supports interactor-contracts.
+- Concise syntax for most common scenarios with `expects` and `promises`. Verifying the presence of the keys/values.
+- Automatic delegation of expected and promised keys to the context.
 
 ```ruby
 # before
@@ -16,6 +22,8 @@ class LoadOrder
 
   expects do
     required(:id).filled
+    required(:something_else).filled
+    required(:a_boolean_flag)
   end
 
   promises do
@@ -35,7 +43,8 @@ end
 class LoadOrder
   include Interactify
 
-  expect :id
+  expect :id, :something_else
+  expect :a_boolean_flag, filled: false
   promise :order
 
   def call
@@ -63,7 +72,7 @@ organize \
 
 Sometimes we want an interactor for each item in a collection.
 But it gets unwieldy. 
-It was complex procedural code and is now broken into neat SRP classes (Single Responsibility Principle). 
+It was complex procedural code and is now broken into neat [SRP classes](https://en.wikipedia.org/wiki/Single_responsibility_principle). 
 But there is still boilerplate and jumping around between files to follow the orchestration.
 It's easy to get lost in the orchestration code that occurs across say 7 or 8 files.
 
