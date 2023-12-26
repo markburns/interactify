@@ -210,6 +210,34 @@ end
 
 ```
 
+### Interactor wiring specs
+Sometimes you have an interactor chain that fails because something is expected deeper down the chain and not provided further up the chain. 
+The existing way to solve this is with enough integration specs to catch them, hunting and sticking a `byebug`, `debugger` or `binding.pry` in at suspected locations and inferring where in the chain the wiring went awry.
+
+But we can do better than that if we always `promise` something that is later `expect`ed.
+
+In order to detect these wiring issues, stick a spec in your test suite like this:
+
+```ruby
+RSpec.describe 'InteractorWiring' do
+  it 'validates the interactors in the whole app', :aggregate_failures do
+    errors = Interactify.validate_app(ignore: [/Priam/])
+
+    expect(errors).to eq ''
+  end
+end
+```
+
+```
+    Missing keys: :order_id
+                        in: AssignOrderToUser
+                       for: PlaceOrder
+```
+
+This allows you to quickly see exactly where you missed assigning something to the context.
+Combine with lambda debugging `->(ctx) { byebug if ctx.order_id.nil?},` in your chains to drop into the exact
+location in the chain to find where to make the change.
+
 ### Sidekiq Jobs
 Sometimes you want to asyncify an interactor.
 
