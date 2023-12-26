@@ -39,7 +39,7 @@ module Interactify
       end
 
       def organizer?
-        klass.respond_to?(:organized)
+        klass.respond_to?(:organized) && klass.organized.any?
       end
 
       def assign_previously_defined(error_context:)

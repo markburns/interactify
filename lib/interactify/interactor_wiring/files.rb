@@ -17,14 +17,28 @@ module Interactify
 
       private
 
-      def organizer_file?(file_contents)
-        (file_contents['include Interactify'] || file_contents[/include Interactor::Organizer/]) &&
-          file_contents[/^\s+organize/]
+      def organizer_file?(code)
+        organizer?(code) && (interactified?(code) || vanilla_organizer?(code))
       end
 
-      def interactor_file?(file_contents)
-        file_contents['include Interactify'] ||
-          file_contents[/include Interactor$/]
+      def interactor_file?(code)
+        !organizer?(code) && (interactified?(code) || vanilla_interactor?(code))
+      end
+
+      def vanilla_organizer?(code)
+        code[/include Interactor::Organizer/]
+      end
+
+      def vanilla_interactor?(code)
+        code[/include Interactor$/]
+      end
+
+      def interactified?(code)
+        code['include Interactify']
+      end
+
+      def organizer?(code)
+        code[/^\s+organize/]
       end
 
       def possible_files

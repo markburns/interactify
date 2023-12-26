@@ -60,9 +60,11 @@ module Interactify
       end
 
       def interactor_klass?(object)
-        return unless object.is_a? Class
+        return unless object.is_a?(Class) && object.ancestors.include?(Interactor)
+        return if object.is_a?(Sidekiq::Job)
 
-        object.ancestors.include?(Interactor) || object.ancestors.include?(Interactor::Organizer)
+
+        true
       end
 
       def new_callable(filename, klass, wiring)
