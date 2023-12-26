@@ -220,6 +220,30 @@ class SomeOrganizer
 end
 
 ```
+### Contract validation failures
+Sometimes contract validation fails at runtime as an exception. It's something unexpected and you'll have an `Interactor::Failure` sent to rollbar/sentry/honeybadger.
+If the context is large it's often hard to spot what the actual problem is or where it occurred.
+
+#### before 
+```
+Interactor::Failure
+
+#<Interactor::Context output_destination="DataExportSystem", output_format=:xml, region_code="XX", custom_flag=false, process_mode="sample", cache_identifier="GenericProcessorSample-XML-XX-0", data_key="GenericProcessorSample", data_version=0, last_process_time=2023-12-26 04:00:18.953000000 GMT +00:00, process_start_time=2023-12-26 06:45:17.915237484 UTC, updated_ids=[BSON::ObjectId('123f77a58444201ff1f0611a'), BSON::ObjectId('123f78148444201fd62a2e9b'), BSON::ObjectId('12375d8084442038712ba40e')], lock_info=#<Processing::Lock _id: 123a767d7b944674cc069064, created_at: 2023-12-26 06:45:17.992417809 UTC, updated_at: 2023-12-26 06:45:17.992417809 UTC, processor: "DataExportSystem", format: "xml", type: "sample">, expired_cache_ids=[], jobs=['jobs must be filled'] items=#<Mongoid::Criteria (Interactor::Failure)
+, tasks=[]>
+```
+
+#### after with call 
+```
+#<Interactor::Context output_destination="DataExportSystem", output_format=:xml, region_code="XX", custom_flag=false, process_mode="sample", cache_identifier="GenericProcessorSample-XML-XX-0", data_key="GenericProcessorSample", data_version=0, last_process_time=2023-12-26 04:00:18.953000000 GMT +00:00, process_start_time=2023-12-26 06:45:17.915237484 UTC, updated_ids=[BSON::ObjectId('123f77a58444201ff1f0611a'), BSON::ObjectId('123f78148444201fd62a2e9b'), BSON::ObjectId('12375d8084442038712ba40e')], lock_info=#<Processing::Lock _id: 123a767d7b944674cc069064, created_at: 2023-12-26 06:45:17.992417809 UTC, updated_at: 2023-12-26 06:45:17.992417809 UTC, processor: "DataExportSystem", format: "xml", type: "sample">, expired_cache_ids=[], tasks=['tasks must be filled'] items=#<Mongoid::Criteria (Interactor::Failure)
+, tasks=[], contract_failures={:tasks=>["tasks must be filled"]}>
+```
+
+#### after with call!
+```
+#<SomeSpecificInteractor::ContractFailure output_destination="DataExportSystem", output_format=:xml, region_code="XX", custom_flag=false, process_mode="sample", cache_identifier="GenericProcessorSample-XML-XX-0", data_key="GenericProcessorSample", data_version=0, last_process_time=2023-12-26 04:00:18.953000000 GMT +00:00, process_start_time=2023-12-26 06:45:17.915237484 UTC, updated_ids=[BSON::ObjectId('123f77a58444201ff1f0611a'), BSON::ObjectId('123f78148444201fd62a2e9b'), BSON::ObjectId('12375d8084442038712ba40e')], lock_info=#<Processing::Lock _id: 123a767d7b944674cc069064, created_at: 2023-12-26 06:45:17.992417809 UTC, updated_at: 2023-12-26 06:45:17.992417809 UTC, processor: "DataExportSystem", format: "xml", type: "sample">, expired_cache_ids=[], tasks=['tasks must be filled'] items=#<Mongoid::Criteria (Interactor::Failure)
+, tasks=[], contract_failures={:tasks=>["tasks must be filled"]}>
+```
+
 
 ### Interactor wiring specs
 Sometimes you have an interactor chain that fails because something is expected deeper down the chain and not provided further up the chain. 
