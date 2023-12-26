@@ -40,7 +40,9 @@ module Interactify
 
         internal_klasses = internal_constants_for(constant)
 
-        ([constant] + internal_klasses).map { |k| new_callable(f, k, self) }
+        ([constant] + internal_klasses).map do |k|
+          new_callable(f, k, self)
+        end
       end
 
       def internal_constants_for(constant)

@@ -50,10 +50,10 @@ module Interactify
 
       def validate_children(error_context:)
         klass.organized.each do |interactor|
-          nested_callable = interactor_lookup[interactor]
-          next if nested_callable.nil?
+          interactor_as_callable = interactor_lookup[interactor]
+          next if interactor_as_callable.nil?
 
-          error_context = nested_callable.validate_callable(error_context: error_context)
+          error_context = interactor_as_callable.validate_callable(error_context:)
         end
 
         error_context
