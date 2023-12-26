@@ -1,15 +1,15 @@
 require 'active_support/all'
+
 require 'interactify/interactor_wiring/callable_representation'
 require 'interactify/interactor_wiring/constants'
 require 'interactify/interactor_wiring/files'
 
 module Interactify
   class InteractorWiring
-    attr_reader :root, :namespace, :ignore
+    attr_reader :root, :ignore
 
-    def initialize(root: Rails.root, namespace: 'Object', ignore: [])
+    def initialize(root: Rails.root, ignore: [])
       @root = root.to_s.gsub(%r{/$}, '')
-      @namespace = namespace
       @ignore = ignore
     end
 
@@ -64,7 +64,6 @@ module Interactify
     def constants
       @constants ||= Constants.new(
         root:,
-        namespace:,
         organizer_files:,
         interactor_files:
       )

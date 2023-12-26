@@ -1,11 +1,10 @@
 module Interactify
   class InteractorWiring
     class Constants
-      attr_reader :root, :namespace, :organizer_files, :interactor_files
+      attr_reader :root, :organizer_files, :interactor_files
 
-      def initialize(root:, namespace:, organizer_files:, interactor_files:)
+      def initialize(root:, organizer_files:, interactor_files:)
         @root = root.is_a?(Pathname) ? root : Pathname.new(root)
-        @namespace = namespace
         @organizer_files = organizer_files
         @interactor_files = interactor_files
       end
@@ -73,7 +72,7 @@ module Interactify
       def constant_for(filename)
         require filename
 
-        underscored_klass_name = underscored_klass_name_without_outer_namespace(filename)
+        underscored_klass_name = underscored_klass_name(filename)
         underscored_klass_name = trim_rails_design_pattern_folder underscored_klass_name
 
         klass_name = underscored_klass_name.classify
@@ -81,7 +80,7 @@ module Interactify
         should_pluralize = filename[underscored_klass_name.pluralize]
         klass_name = klass_name.pluralize if should_pluralize
 
-        outer_namespace_constant.const_get(klass_name)
+        Object.const_get(klass_name)
       end
 
       # Example:
@@ -106,20 +105,14 @@ module Interactify
       # "/namespace/sub_namespace/class_name.rb"
       #  ['', 'namespace', 'sub_namespace', 'class_name.rb']
       #  ['namespace', 'sub_namespace', 'class_name.rb']
-      # remove outernamespace (SpecSupport)
-      def underscored_klass_name_without_outer_namespace(filename)
+      def underscored_klass_name(filename)
         filename.to_s # "/home/code/something/app/interactors/namespace/sub_namespace/class_name.rb"
           .gsub(root.to_s, '')   # "/namespace/sub_namespace/class_name.rb"
           .gsub('/concerns', '') #  concerns directory is ignored by Zeitwerk
           .split('/')            # "['', 'namespace', 'sub_namespace', 'class_name.rb']
           .compact_blank         # "['namespace', 'sub_namespace', 'class_name.rb']
-          .reject.with_index { |segment, i| i.zero? && segment == namespace }
           .join('/')             # 'namespace/sub_namespace/class_name.rb'
           .gsub(/\.rb\z/, '')     # 'namespace/sub_namespace/class_name'
-      end
-
-      def outer_namespace_constant
-        @outer_namespace_constant ||= Object.const_get(namespace)
       end
     end
   end

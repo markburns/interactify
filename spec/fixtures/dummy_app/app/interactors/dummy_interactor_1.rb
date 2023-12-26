@@ -1,7 +1,5 @@
-module SpecSupport
-  class DummyInteractor1
-    include Interactor
+class DummyInteractor1
+  include Interactor
 
-    delegate :foo, :bar, :baz, to: :context
-  end
+  delegate :foo, :bar, :baz, to: :context
 end
