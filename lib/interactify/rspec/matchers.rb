@@ -6,7 +6,7 @@ require 'interactify/interactor_wiring'
 
 RSpec::Matchers.define :expect_inputs do |*expected_inputs|
   match do |actual|
-    actual_inputs = klass.expected_keys
+    actual_inputs = actual.expected_keys
     @missing_inputs = expected_inputs - actual_inputs
     @extra_inputs = actual_inputs - expected_inputs
 
