@@ -207,6 +207,50 @@ class SomeOrganizer
     self.if(:key_set_on_context, self.chain(DoThingA, ThenB, ThenC), DoDifferentThingB),
     EitherWayDoThis
 end
+
+```
+
+### Sidekiq Jobs
+Sometimes you want to asyncify an interactor.
+
+```ruby
+# before
+class SomeInteractor
+  include Interactify
+
+  def call
+    # ...
+  end
+end
+
+clsas SomeInteractorJob
+  include Sidekiq::Job
+
+  def perform(*args)
+    SomeInteractor.call(*args)
+  end
+end
+
+SomeInteractor.call(*args)
+code is changed to
+SomeInteractorJob.perform_async(*args)
+```
+
+```ruby
+# after
+class SomeInteractor
+  include Interactify
+
+  def call
+    # ...
+  end
+end
+
+# no need to manually create a job class or handle the perform/call impedance mismatch
+SomeInteractor::Async.call(*args)
+
+# This also makes it easy to add cron jobs to run interactors. As any interactor can be asyncified.
+# By using it's internal Async class.
 ```
 
 ## FAQs
