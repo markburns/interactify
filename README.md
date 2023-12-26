@@ -19,7 +19,7 @@ gem 'interactify'
 ## Usage
 
 ### Initializer
-```
+```ruby
 # in config/initializers/interactify.rb
 Interactify.configure do |config|
   # default
