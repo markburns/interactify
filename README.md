@@ -5,7 +5,7 @@ However, sometimes in complex interactor chains, the complex debugging happens a
 
 [interactor-contracts](https://github.com/michaelherold/interactor-contracts) does a fantastic job of making your interactor chains more reliable.
 
-Interactify wraps the interactor and interactor-contract gem and provides additional functionality making chaining and understanding interactor chains easier.
+Interactify wraps the interactor and interactor-contracts gem and provides additional functionality making chaining and understanding interactor chains easier.
 
 This is a bells and whistles gem and assumes you are working in a Rails project with Sidekiq.
 However, I'm open to the idea of making it more focused and making these more pluggable.
