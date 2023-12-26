@@ -30,7 +30,6 @@ RSpec.describe 'rspec matchers' do
     end
   end
 
-
   module self::SomeNamespace
     Vanilla = Class.new do
       include Interactor

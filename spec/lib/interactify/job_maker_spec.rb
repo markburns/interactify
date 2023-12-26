@@ -9,10 +9,10 @@ RSpec.describe Interactify::JobMaker do
 
   subject do
     described_class.new(
-      container_klass: container_klass,
-      opts: opts,
-      klass_suffix: klass_suffix,
-      method_name: method_name
+      container_klass:,
+      opts:,
+      klass_suffix:,
+      method_name:
     )
   end
 
