@@ -6,7 +6,7 @@ require 'interactify/interactor_wiring'
 
 RSpec::Matchers.define :expect_inputs do |*expected_inputs|
   match do |actual|
-    actual_inputs = expected_keys(actual)
+    actual_inputs = klass.expected_keys
     @missing_inputs = expected_inputs - actual_inputs
     @extra_inputs = actual_inputs - expected_inputs
 
@@ -19,17 +19,13 @@ RSpec::Matchers.define :expect_inputs do |*expected_inputs|
     message += "\n\textra inputs: #{@extra_inputs}" if @extra_inputs
     message
   end
-
-  def expected_keys(klass)
-    Array(klass.contract.expectations.instance_eval { @terms }.json&.rules&.keys)
-  end
 end
 
 # Custom matcher that implements promise_outputs
 # e.g. expect(described_class).to promise_outputs(:request_logger)
 RSpec::Matchers.define :promise_outputs do |*expected_outputs|
   match do |actual|
-    actual_outputs = promised_keys(actual)
+    actual_outputs = actual.promised_keys
     @missing_outputs = expected_outputs - actual_outputs
     @extra_outputs = actual_outputs - expected_outputs
 
@@ -41,10 +37,6 @@ RSpec::Matchers.define :promise_outputs do |*expected_outputs|
     message += "\n\tmissing outputs: #{@missing_outputs}" if @missing_outputs
     message += "\n\textra outputs: #{@extra_outputs}" if @extra_outputs
     message
-  end
-
-  def promised_keys(klass)
-    Array(klass.contract.promises.instance_eval { @terms }.json&.rules&.keys)
   end
 end
 

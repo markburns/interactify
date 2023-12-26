@@ -58,7 +58,7 @@ module Interactify
       def args(context)
         args = context.to_h.stringify_keys
 
-        return args unless container_klass.respond_to?(:contract)
+        return args unless container_klass.respond_to?(:expected_keys)
 
         restrict_to_optional_or_keys_from_contract(args)
       end
@@ -86,14 +86,7 @@ module Interactify
       end
 
       def restrict_to_optional_or_keys_from_contract(args)
-        keys = container_klass
-               .contract
-               .expectations
-               .instance_eval { @terms }
-               .schema
-               .key_map
-               .to_dot_notation
-               .map(&:to_s)
+        keys = container_klass.expected_keys.map(&:to_s)
 
         optional = Array(container_klass.optional_attrs).map(&:to_s)
         keys += optional

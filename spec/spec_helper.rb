@@ -5,6 +5,7 @@ require 'deep_matching'
 require 'rails'
 require 'debug'
 require 'sidekiq/testing'
+require 'debug'
 
 Sidekiq::Testing.fake!
 Dir.glob('spec/support/**/*.rb').each { |f| require "./#{f}" }

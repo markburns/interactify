@@ -1,6 +1,7 @@
 require 'interactify/jobable'
 require 'interactify/call_wrapper'
 require 'interactify/organizer_call_monkey_patch'
+require 'interactify/contract_failure'
 
 module Interactify
   module ContractHelpers
@@ -39,13 +40,10 @@ module Interactify
       end
     end
 
-    class ContractFailure < ::Interactor::Failure
-    end
-
     included do
       c = Class.new(ContractFailure)
-      # example self is Shopkeeper::Fetch
-      # failure class:  Shopkeeper::Fetch::InteractorContractFailure
+      # example self is Whatever::SomeInteractor
+      # failure class:  Whatever::SomeInteractor::InteractorContractFailure
       const_set 'InteractorContractFailure', c
       prepend CallWrapper
       include OrganizerCallMonkeyPatch if ancestors.include? Interactor::Organizer

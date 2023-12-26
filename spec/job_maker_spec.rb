@@ -1,5 +1,8 @@
 RSpec.describe Interactify::JobMaker do
-  let(:container_klass) { double('ContainerKlass') }
+  let(:container_klass) { double('ContainerKlass', expected_keys:, promised_keys:, optional_attrs:) }
+  let(:optional_attrs) { [] }
+  let(:expected_keys) { [] }
+  let(:promised_keys) { [] }
   let(:opts) { { queue: 'default' } }
   let(:klass_suffix) { 'Suffix' }
   let(:method_name) { :call! }
@@ -57,19 +60,9 @@ RSpec.describe Interactify::JobMaker do
     describe '#args' do
       let(:context) { double('Context', to_h: { 'foo' => 'bar' }) }
 
-      context 'when container_klass responds to :contract' do
+      context 'when container_klass responds to :expected_keys' do
         before do
-          allow(container_klass).to receive(:contract)
-            .and_return(double('Contract',
-                               expectations: double('Expectations',
-                                                    instance_eval: double(
-                                                      '@terms', schema: double(
-                                                        'Schema', key_map: double(
-                                                          'KeyMap', to_dot_notation: [:foo]
-                                                        )
-                                                      )
-                                                    ))))
-          allow(container_klass).to receive(:optional_attrs).and_return([:baz])
+          allow(container_klass).to receive(:expected_keys)  { [:foo] }
         end
 
         it 'restricts keys based on contract and optional attributes' do
@@ -79,7 +72,12 @@ RSpec.describe Interactify::JobMaker do
         end
       end
 
-      context 'when container_klass does not respond to :contract' do
+      context 'when container_klass does not respond to :expected_keys' do
+        before do
+          allow(container_klass).to receive(:respond_to?).and_return true
+          allow(container_klass).to receive(:respond_to?).with(:expected_keys).and_return(false)
+        end
+
         it 'returns args without any restrictions' do
           result = subject.args(context)
 
@@ -113,18 +111,7 @@ RSpec.describe Interactify::JobMaker do
         let(:optional_keys) { ['baz'] }
 
         before do
-          allow(container_klass)
-            .to receive(:contract)
-            .and_return(double('Contract',
-                               expectations: double('Expectations',
-                                                    instance_eval: double(
-                                                      '@terms', schema: double(
-                                                        'Schema', key_map: double(
-                                                          'KeyMap', to_dot_notation: contract_keys
-                                                        )
-                                                      )
-                                                    ))))
-          allow(container_klass).to receive(:optional_attrs).and_return(optional_keys)
+          allow(container_klass).to receive(:expected_keys) { contract_keys + optional_keys }
         end
 
         it 'restricts keys based on contract and optional attributes' do

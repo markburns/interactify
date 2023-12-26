@@ -78,12 +78,12 @@ module Interactify
         validate_self(error_context: error_context)
       end
 
-      def promised_keys
-        Array(klass.contract.promises.instance_eval { @terms }.json&.rules&.keys)
+      def expected_keys
+        klass.respond_to?(:expected_keys) ? klass.expected_keys : []
       end
 
-      def expected_keys
-        Array(klass.contract.expectations.instance_eval { @terms }.json&.rules&.keys)
+      def promised_keys
+        klass.respond_to?(:promised_keys) ? klass.promised_keys : []
       end
 
       def all_keys

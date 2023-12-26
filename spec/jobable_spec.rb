@@ -33,11 +33,8 @@ RSpec.describe Interactify::Jobable do
   class self::TestAsyncInteractor
     include Interactify
 
-    expects do
-      required(:a).filled
-      required(:b).filled
-      optional(:c)
-    end
+    expect :a, :b
+    optional :c
   end
 
   class self::TestInheritanceBaseInteractify

@@ -9,6 +9,7 @@ require 'interactify/version'
 require 'interactify/contract_helpers'
 require 'interactify/dsl'
 require 'interactify/interactor_wiring'
+require 'interactify/promising'
 
 module Interactify
   extend ActiveSupport::Concern
@@ -73,6 +74,29 @@ module Interactify
     # ExampleInteractor::Async.call(foo: 'bar')
     include Interactify::Jobable
     interactor_job
+  end
+
+  class_methods do
+    def promising(*args)
+      Promising.validate(self, *args)
+    end
+
+    def promised_keys
+      _interactify_extract_keys(contract.promises)
+    end
+
+    def expected_keys
+      _interactify_extract_keys(contract.expectations)
+    end
+
+    private
+
+    # this is the most brittle part of the code, relying on
+    # interactor-contracts internals
+    # so extracted it to here so change is isolated
+    def _interactify_extract_keys(clauses)
+      clauses.instance_eval { @terms }.json&.rules&.keys
+    end
   end
 
   class Configuration
