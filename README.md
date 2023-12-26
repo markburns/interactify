@@ -1,7 +1,8 @@
 # Interactify
 
-Interactors are a great way to encapsulate business logic in a Rails application. 
+[Interactors](https://github.com/collectiveidea/interactor) are a great way to encapsulate business logic in a Rails application. 
 However, sometimes in complex interactor chains, the complex debugging happens at one level up from your easy to read and test interactors.
+[interactor-contracts](https://github.com/michaelherold/interactor-contracts) does a fantastic job of making your interactor chains more reliable.
 
 Interactify wraps the interactor and interactor-contract gem and provides additional functionality making chaining and understanding interactor chains easier.
 
