@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Interactify do
-  describe '.each' do
+  describe ".each" do
     module self::SomeNamespace
       A = Class.new do
         include Interactor
@@ -35,7 +35,7 @@ RSpec.describe Interactify do
       self.class::SomeNamespace.const_get(klass)
     end
 
-    it 'creates an interactor class that iterates over the given collection' do
+    it "creates an interactor class that iterates over the given collection" do
       allow(SpecSupport).to receive(:const_set).and_wrap_original do |meth, name, klass|
         expect(name).to eq(:EachThing)
         expect(klass).to be_a(Class)
@@ -44,13 +44,13 @@ RSpec.describe Interactify do
       end
 
       klass = SpecSupport.each(:things, k(:A), k(:B), k(:C))
-      expect(klass.name).to eq('SpecSupport::EachThing')
+      expect(klass.name).to eq("SpecSupport::EachThing")
 
       file, line = klass.source_location
       expect(file).to match %r{spec/support/spec_support_binding\.rb}
-      expect(line).to eq(1)
+      expect(line).to eq(3)
 
-      result = klass.call!(:things => [1, 2, 3])
+      result = klass.call!(things: [1, 2, 3])
       expect(result.a).to eq([1, 2, 3])
       expect(result.b).to eq([2, 4, 6])
       expect(result.c).to eq([3, 6, 9])

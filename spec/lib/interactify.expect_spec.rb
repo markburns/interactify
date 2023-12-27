@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 RSpec.describe Interactify do
   include DeepMatching
 
-  describe '.expect' do
+  describe ".expect" do
     class DummyInteractorClass
       include Interactify
       expect :thing
@@ -18,7 +20,7 @@ RSpec.describe Interactify do
 
     10.times do
       s = SecureRandom.alphanumeric(50)
-      s.gsub!(/^\d/, '')
+      s.gsub!(/^\d/, "")
       noisy_context[s] = SecureRandom.uuid
     end
     NOISY_CONTEXT = noisy_context
@@ -37,22 +39,22 @@ RSpec.describe Interactify do
       end
     end
 
-    context 'when breaking the promise' do
+    context "when breaking the promise" do
       let(:failures) do
         {
-          called_klass_list: 'DummyInteractorClass',
+          called_klass_list: "DummyInteractorClass",
           contract_failures:
         }
       end
 
       let(:contract_failures) do
-        { thing: ['thing is missing'], this: ['this is missing'] }
+        { thing: ["thing is missing"], this: ["this is missing"] }
       end
 
-      context 'when using call' do
+      context "when using call" do
         let(:result) { AnotherDummyInteractorOrganizerClass.call }
 
-        it 'does not raise' do
+        it "does not raise" do
           expect { result }.not_to raise_error
           expect(result.contract_failures).to eq failures[:contract_failures]
         end
@@ -73,7 +75,7 @@ RSpec.describe Interactify do
         end
       end
 
-      it 'raises a useful error', :aggregate_failures do
+      it "raises a useful error", :aggregate_failures do
         expect { AnotherDummyInteractorOrganizerClass.call! }.to raise_error do |e|
           expect(e.class).to eq DummyInteractorClass::InteractorContractFailure
 
