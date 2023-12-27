@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Interactify
   class AsyncJobKlass
     attr_reader :container_klass, :klass_suffix
