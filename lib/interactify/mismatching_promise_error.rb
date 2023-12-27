@@ -1,14 +1,16 @@
-require 'interactify/contract_failure'
+# frozen_string_literal: true
+
+require "interactify/contract_failure"
 
 module Interactify
   class MismatchingPromiseError < ContractFailure
-    def initialize(interactor, promising)
+    def initialize(interactor, promising, promised_keys)
       super <<~MESSAGE.chomp
         #{interactor} does not promise:
-        #{promising.map(&:inspect).join(', ')}
+        #{promising.inspect}
 
         Actual promises are:
-        #{interactor.promised_keys.map(&:inspect).join(', ')}
+        #{promised_keys.inspect}
       MESSAGE
     end
   end
