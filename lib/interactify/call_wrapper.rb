@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Interactify
   module CallWrapper
     # https://github.com/collectiveidea/interactor/blob/57b2af9a5a5afeb2c01059c40b792485cc21b052/lib/interactor.rb#L114

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Interactify
   class InteractorWiring
     class Files
@@ -34,7 +36,7 @@ module Interactify
       end
 
       def interactified?(code)
-        code['include Interactify']
+        code["include Interactify"]
       end
 
       def organizer?(code)

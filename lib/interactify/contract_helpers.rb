@@ -1,7 +1,9 @@
-require 'interactify/jobable'
-require 'interactify/call_wrapper'
-require 'interactify/organizer_call_monkey_patch'
-require 'interactify/contract_failure'
+# frozen_string_literal: true
+
+require "interactify/jobable"
+require "interactify/call_wrapper"
+require "interactify/organizer_call_monkey_patch"
+require "interactify/contract_failure"
 
 module Interactify
   module ContractHelpers
@@ -44,7 +46,7 @@ module Interactify
       c = Class.new(ContractFailure)
       # example self is Whatever::SomeInteractor
       # failure class:  Whatever::SomeInteractor::InteractorContractFailure
-      const_set 'InteractorContractFailure', c
+      const_set "InteractorContractFailure", c
       prepend CallWrapper
       include OrganizerCallMonkeyPatch if ancestors.include? Interactor::Organizer
 

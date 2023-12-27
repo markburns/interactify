@@ -1,4 +1,6 @@
-require 'interactify/job_maker'
+# frozen_string_literal: true
+
+require "interactify/job_maker"
 
 module Interactify
   module Jobable
@@ -18,7 +20,7 @@ module Interactify
 
         to_call = defined?(super_klass::Async) ? :interactor_job : :job_calling
 
-        klass.send(to_call, opts: opts, method_name: jobable_method_name)
+        klass.send(to_call, opts:, method_name: jobable_method_name)
         super(klass)
       end
     end
@@ -51,7 +53,7 @@ module Interactify
       # obviously you will need to be aware that later interactors
       # in an interactor chain cannot depend on the result of the async
       # interactor
-      def interactor_job(method_name: :call!, opts: {}, klass_suffix: '')
+      def interactor_job(method_name: :call!, opts: {}, klass_suffix: "")
         job_maker = JobMaker.new(container_klass: self, opts:, method_name:, klass_suffix:)
         # with WhateverInteractor::Job you can perform the interactor as a job
         # from sidekiq
@@ -80,7 +82,7 @@ module Interactify
       # # the following class is created that you can use to enqueue a job
       # in the sidekiq yaml file
       # ExampleClass::Job.some_method
-      def job_calling(method_name:, opts: {}, klass_suffix: '')
+      def job_calling(method_name:, opts: {}, klass_suffix: "")
         job_maker = JobMaker.new(container_klass: self, opts:, method_name:, klass_suffix:)
 
         const_set("Job#{klass_suffix}", job_maker.job_class)

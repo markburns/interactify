@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Interactify
   class InteractorWiring
     class Constants
@@ -27,20 +29,20 @@ module Interactify
 
       private
 
-      def callables_in_file(f)
+      def callables_in_file(filename)
         @callables_in_file ||= {}
 
-        @callables_in_file[f] ||= _callables_in_file(f)
+        @callables_in_file[filename] ||= _callables_in_file(filename)
       end
 
-      def _callables_in_file(f)
-        constant = constant_for(f)
+      def _callables_in_file(filename)
+        constant = constant_for(filename)
         return if constant == Interactify
 
         internal_klasses = internal_constants_for(constant)
 
         ([constant] + internal_klasses).map do |k|
-          new_callable(f, k, self)
+          new_callable(filename, k, self)
         end
       end
 
@@ -55,14 +57,17 @@ module Interactify
         constant.module_eval do
           symbol.to_s.constantize
         rescue StandardError
-          "#{constant.name}::#{symbol}".constantize rescue nil
+          begin
+            "#{constant.name}::#{symbol}".constantize
+          rescue StandardError
+            nil
+          end
         end
       end
 
       def interactor_klass?(object)
         return unless object.is_a?(Class) && object.ancestors.include?(Interactor)
         return if object.is_a?(Sidekiq::Job)
-
 
         true
       end
@@ -93,14 +98,13 @@ module Interactify
           regexable_folder = Regexp.quote("#{folder}/")
           regex = /^#{regexable_folder}/
 
-          return filename.gsub(regex, '') if filename.match?(regex)
+          return filename.gsub(regex, "") if filename.match?(regex)
         end
 
         filename
       end
 
-      def rails_folders = Dir.glob(root / '*').map { Pathname.new _1 }.select(&:directory?).map { |f| File.basename(f) }
-
+      def rails_folders = Dir.glob(root / "*").map { Pathname.new _1 }.select(&:directory?).map { |f| File.basename(f) }
 
       # Example:
       # "/home/code/something/app/interactors/namespace/sub_namespace/class_name.rb"
@@ -109,12 +113,12 @@ module Interactify
       #  ['namespace', 'sub_namespace', 'class_name.rb']
       def underscored_klass_name(filename)
         filename.to_s # "/home/code/something/app/interactors/namespace/sub_namespace/class_name.rb"
-          .gsub(root.to_s, '')   # "/namespace/sub_namespace/class_name.rb"
-          .gsub('/concerns', '') #  concerns directory is ignored by Zeitwerk
-          .split('/')            # "['', 'namespace', 'sub_namespace', 'class_name.rb']
-          .compact_blank         # "['namespace', 'sub_namespace', 'class_name.rb']
-          .join('/')             # 'namespace/sub_namespace/class_name.rb'
-          .gsub(/\.rb\z/, '')     # 'namespace/sub_namespace/class_name'
+                .gsub(root.to_s, "")   # "/namespace/sub_namespace/class_name.rb"
+                .gsub("/concerns", "") #  concerns directory is ignored by Zeitwerk
+                .split("/")            # "['', 'namespace', 'sub_namespace', 'class_name.rb']
+                .compact_blank         # "['namespace', 'sub_namespace', 'class_name.rb']
+                .join("/")             # 'namespace/sub_namespace/class_name.rb'
+                .gsub(/\.rb\z/, "")     # 'namespace/sub_namespace/class_name'
       end
     end
   end

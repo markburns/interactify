@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Interactify
   class InteractorWiring
     class ErrorContext

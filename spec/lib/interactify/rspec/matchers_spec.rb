@@ -1,8 +1,10 @@
-require 'interactify/rspec/matchers'
+# frozen_string_literal: true
 
-RSpec.describe 'rspec matchers' do
-  describe 'expect_inputs' do
-    it 'passes when the inputs are correct' do
+require "interactify/rspec/matchers"
+
+RSpec.describe "rspec matchers" do
+  describe "expect_inputs" do
+    it "passes when the inputs are correct" do
       expect(k(:A)).to expect_inputs(:a)
       expect(k(:A)).not_to expect_inputs(:b)
 
@@ -12,20 +14,20 @@ RSpec.describe 'rspec matchers' do
       expect(k(:P)).not_to expect_inputs(:a, :b)
     end
 
-    it 'works with vanilla interactors without blowing up' do
+    it "works with vanilla interactors without blowing up" do
       expect(k(:Vanilla)).not_to expect_inputs(:a)
     end
   end
 
-  describe 'promise_outputs' do
-    it 'passes when the outputs are correct' do
+  describe "promise_outputs" do
+    it "passes when the outputs are correct" do
       expect(k(:A)).not_to promise_outputs(:a)
       expect(k(:A)).not_to promise_outputs(:a)
 
       expect(k(:P)).to promise_outputs(:a, :b, :c)
     end
 
-    it 'works with vanilla interactors without blowing up' do
+    it "works with vanilla interactors without blowing up" do
       expect(k(:Vanilla)).not_to promise_outputs(:a)
     end
   end

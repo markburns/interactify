@@ -1,4 +1,6 @@
-require 'interactify/interactor_wiring/error_context'
+# frozen_string_literal: true
+
+require "interactify/interactor_wiring/error_context"
 
 module Interactify
   class InteractorWiring

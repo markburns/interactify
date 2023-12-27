@@ -1,5 +1,7 @@
-require 'sidekiq'
-require 'sidekiq/job'
+# frozen_string_literal: true
+
+require "sidekiq"
+require "sidekiq/job"
 
 module Interactify
   class JobMaker
@@ -26,19 +28,22 @@ module Interactify
 
         raise ArgumentError, "Invalid keys: #{invalid_keys}" if invalid_keys.any?
 
-        job_class = Class.new do
+        job_class(opts).tap do |klass|
+          klass.const_set(:JOBABLE_OPTS, opts)
+          klass.const_set(:JOBABLE_METHOD_NAME, method_name)
+        end
+      end
+
+      def job_class(opts)
+        Class.new do
           include Sidekiq::Job
 
-          sidekiq_options(this.opts)
+          sidekiq_options(opts)
 
           def perform(...)
             self.class.module_parent.send(self.class::JOBABLE_METHOD_NAME, ...)
           end
         end
-
-        job_class.const_set(:JOBABLE_OPTS, opts)
-        job_class.const_set(:JOBABLE_METHOD_NAME, method_name)
-        job_class
       end
     end
 
@@ -62,8 +67,6 @@ module Interactify
 
         restrict_to_optional_or_keys_from_contract(args)
       end
-
-      private
 
       def attach_call(async_job_class)
         # e.g. SomeInteractor::AsyncWithSuffix.call(foo: 'bar')

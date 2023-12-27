@@ -1,4 +1,6 @@
-require 'interactify/interactor_wiring'
+# frozen_string_literal: true
+
+require "interactify/interactor_wiring"
 
 # Custom matcher that implements expect_inputs
 # e.g.

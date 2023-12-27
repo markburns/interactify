@@ -1,15 +1,17 @@
-require 'active_support/all'
+# frozen_string_literal: true
 
-require 'interactify/interactor_wiring/callable_representation'
-require 'interactify/interactor_wiring/constants'
-require 'interactify/interactor_wiring/files'
+require "active_support/all"
+
+require "interactify/interactor_wiring/callable_representation"
+require "interactify/interactor_wiring/constants"
+require "interactify/interactor_wiring/files"
 
 module Interactify
   class InteractorWiring
     attr_reader :root, :ignore
 
     def initialize(root: Rails.root, ignore: [])
-      @root = root.to_s.gsub(%r{/$}, '')
+      @root = root.to_s.gsub(%r{/$}, "")
       @ignore = ignore
     end
 
@@ -27,21 +29,31 @@ module Interactify
     def format_errors(all_errors)
       formatted_errors = []
 
+      each_error(all_errors) do |missing, interactor, organizer|
+        format_error(missing, interactor, organizer, formatted_errors)
+      end
+
+      formatted_errors.join("\n\n")
+    end
+
+    def each_error(all_errors)
       all_errors.each do |organizer, error_context|
         next if ignore_klass?(ignore, organizer.klass)
 
         error_context.missing_keys.each do |interactor, missing|
           next if ignore_klass?(ignore, interactor.klass)
 
-          formatted_errors << <<~ERROR
-            Missing keys: #{missing.to_a.map(&:to_sym).map(&:inspect).join(', ')}
-             expected in: #{interactor.klass}
-               called by: #{organizer.klass}
-          ERROR
+          yield missing, interactor, organizer
         end
       end
+    end
 
-      formatted_errors.join("\n\n")
+    def format_error(missing, interactor, organizer, formatted_errors)
+      formatted_errors << <<~ERROR
+        Missing keys: #{missing.to_a.map(&:to_sym).map(&:inspect).join(', ')}
+         expected in: #{interactor.klass}
+           called by: #{organizer.klass}
+      ERROR
     end
 
     def ignore_klass?(ignore, klass)
@@ -72,7 +84,7 @@ module Interactify
     delegate :organizer_files, :interactor_files, to: :files
 
     def files
-      @files ||= Files.new(root: root)
+      @files ||= Files.new(root:)
     end
   end
 end

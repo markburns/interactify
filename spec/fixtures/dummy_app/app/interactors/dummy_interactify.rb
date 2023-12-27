@@ -7,6 +7,5 @@ class DummyInteractify
     required(:baz)
   end
 
-  def call
-  end
+  def call; end
 end

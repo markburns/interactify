@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require 'interactor'
-require 'interactor-contracts'
-require 'rails'
-require 'active_support/all'
+require "interactor"
+require "interactor-contracts"
+require "rails"
+require "active_support/all"
 
-require 'interactify/version'
-require 'interactify/contract_helpers'
-require 'interactify/dsl'
-require 'interactify/interactor_wiring'
-require 'interactify/promising'
+require "interactify/version"
+require "interactify/contract_helpers"
+require "interactify/dsl"
+require "interactify/interactor_wiring"
+require "interactify/promising"
 
 module Interactify
   extend ActiveSupport::Concern
@@ -109,7 +109,7 @@ module Interactify
     attr_writer :root
 
     def root
-      @root ||= Rails.root / 'app'
+      @root ||= Rails.root / "app"
     end
   end
 

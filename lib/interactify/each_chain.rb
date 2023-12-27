@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Interactify
   class EachChain
     attr_reader :each_loop_klasses, :plural_resource_name, :evaluating_receiver
