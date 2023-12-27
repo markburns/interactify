@@ -1,15 +1,6 @@
 # Interactify
 
-[Interactors](https://github.com/collectiveidea/interactor) are a great way to encapsulate business logic in a Rails application. 
-However, sometimes in complex interactor chains, the complex debugging happens at one level up from your easy to read and test interactors.
-
-[interactor-contracts](https://github.com/michaelherold/interactor-contracts) does a fantastic job of making your interactor chains more reliable.
-
-Interactify wraps the interactor and interactor-contracts gem and provides additional functionality making chaining and understanding interactor chains easier.
-
-This is a bells and whistles gem and assumes you are working in a Rails project with Sidekiq.
-However, I'm open to the idea of making it more focused and making these more pluggable.
-
+Interactify enhances Rails applications by simplifying complex interactor chains. This gem builds on [interactors](https://github.com/collectiveidea/interactor) and [interactor-contracts](https://github.com/michaelherold/interactor-contracts) to improve readability and maintainability of business logic. It's optimized for Rails projects using Sidekiq, offering advanced features for chain management and debugging. Interactify is about making interactor usage in Rails more efficient and less error-prone, reducing the overhead of traditional interactor orchestration.
 ## Installation
 
 ```ruby
@@ -46,6 +37,8 @@ expect(described_class).to promise_outputs(:fee, :fi, :fo, :fum)
 
 ### Syntactic Sugar
 - Everything is an Organizer/Interactor and supports interactor-contracts.
+- They only becomes considered an organizer once `organize` is called.
+- They could technically be both (if you want?) but you have to remember to call `super` within `call` to trigger the organized interactors.
 - Concise syntax for most common scenarios with `expects` and `promises`. Verifying the presence of the keys/values.
 - Automatic delegation of expected and promised keys to the context.
 
@@ -65,7 +58,6 @@ class LoadOrder
   promises do
     required(:order).filled
   end
-
 
   def call
     context.order = Order.find(context.id)
@@ -92,8 +84,8 @@ end
 
 ### Lambdas
 
-With vanilla interactors, it's not possible to use lambdas in organizers, and sometimes we only want a lambda.
-So we added support.
+With vanilla interactors, it wasn't possible to use lambdas in organizers.
+But sometimes we only want a lambda. So we added support.
 
 ```ruby
 organize LoadOrder, ->(context) { context.order = context.order.decorate }
@@ -160,7 +152,6 @@ class DoSomethingWithOrder
 end
 ```
 
-
 ```ruby
 # after
 class OuterOrganizer
@@ -181,7 +172,6 @@ class LoadOrder
   end
 end
 
-
 class DoSomethingWithOrder
   # ... boilerplate ...
   def call
@@ -190,7 +180,7 @@ class DoSomethingWithOrder
 end
 ```
 
-### Conditionals (if/else)
+### Conditionals (if/else) with lambda
 
 Along the same lines of each/iteration. We sometimes have to 'break the chain' with interactors just to conditionally call one interactor chain path or another.
 
@@ -215,7 +205,6 @@ class InnerThing
 end
 ```
 
-
 ```ruby
 # after
 class OuterThing
@@ -224,10 +213,9 @@ class OuterThing
     SetupStep,
     self.if(->(c){ c.thing == 'a' }, DoThingA, DoThingB),
 end
-
 ```
 
-### More Conditionals 
+### Conditionals with a key from the context 
 
 ```ruby
 class OuterThing
@@ -351,19 +339,19 @@ class SomeInteractor
     # ...
   end
 end
-
-clsas SomeInteractorJob
-  include Sidekiq::Job
-
-  def perform(*args)
-    SomeInteractor.call(*args)
-  end
-end
 ```
 
 ```diff
--SomeInteractor.call(*args)
-+SomeInteractorJob.perform_async(*args)
+- SomeInteractor.call(*args)
++ class SomeInteractorJob
++   include Sidekiq::Job
++
++   def perform(*args)
++     SomeInteractor.call(*args)
++   end
++ end
++
++ SomeInteractorJob.perform_async(*args)
 ```
 
 ```ruby
@@ -380,16 +368,14 @@ end
 No need to manually create a job class or handle the perform/call impedance mismatch
 
 ```diff
--SomeInteractor.call!(*args)
-+SomeInteractor::Async.call!(*args)
+- SomeInteractor.call!(*args)
++ SomeInteractor::Async.call!(*args)
 ```
 
 This also makes it easy to add cron jobs to run interactors. As any interactor can be asyncified.
 By using it's internal Async class.
 
 N.B. as your class is now executing asynchronously you can no longer rely on its promises later on in the chain.
-
-
 
 ## FAQs
 - This is ugly isn't it?
@@ -406,59 +392,33 @@ class OuterOrganizer
     )
 end
 ```
+1. Do you find the syntax of OuterOrganizer ugly?
 
-Yes I agree. It's early days and I'm open to syntax improvement ideas. This is really about it being conceptually less ugly than the alternative, which is to jump around between lots of files. In the existing alternative to using this gem the ugliness is not within each individual file, but within the overall hidden architecture and the hunting process of jumping around in complex interactor chains. We can't see that ugliness but we probably experience it. If you don't feel or experience that ugliness then this gem may not be the right fit for you.
+While the syntax might seem unconventional initially, its conceptual elegance lies in streamlining complex interactor chains. Traditional methods often involve navigating through multiple files, creating a hidden and cumbersome architecture. This gem aims to alleviate that by centralizing operations, making the overall process more intuitive.
 
+2. Is this compatible with interactor/interactor-contracts?
 
-- Is this interactor/interactor-contracts compatible?
-- 
-Yes and we use them as dependencies. It's possible we'd drop those dependencies in the future but unlikely. I think it's highly likely we'd retain compatibility.
+Yes, it's fully compatible. We currently use these as dependencies. While there's a possibility of future changes, maintaining this compatibility is a priority.
 
+3. Why not suggest enhancements to the interactor or interactor-contracts gems?
 
-- Why not propose changes to the interactor or interactor-contracts gem?
+These gems are excellent in their own right, which is why we've built upon them. Proposing such extensive changes might not align with their current philosophy. However, if our approach proves stable and garners interest, we're open to discussing potential contributions to these gems.
 
-Honestly, I think both are great and why we've built on top of them. 
-I presume they'd object to such an extensive opinionated change, and I think that would be the right decision too.
-If this becomes more stable, less coupled to Rails, there's interest, and things we can provide upstream I'd be happy to propose changes to those gems.
+4. Is this just syntactic sugar?
 
-- Isn't this all just syntactic sugar?
+It's more than that. This approach enhances readability and comprehension of the code. It simplifies the structure, making it easier to navigate and maintain.
 
-Yes, but it's sugar that makes the code easier to read and understand.
+5. Is the new DSL/syntax easier to understand than plain old Ruby objects (POROs)?
 
-- Is it really easier to parse this new DSL/syntax than POROs?
-  
-That's subjective, but I think so. The benefit is you have fewer extraneous files patching over a common problem in interactors.
+This is subjective, but we believe it is. It reduces the need for numerous files addressing common interactor issues, thereby streamlining the workflow.
 
-- But it gets really verbose and complex!
-  
-Again this is subjective, but if you've worked with apps with hundred or thousands of interactors, you'll have encountered these problems.
-I think when we work with interactors we're in one of two modes. 
-Hunting to find the interactor we need to change, or working on the interactor we need to change.
-This makes the first step much easier. 
-The second step has always been a great experience with interactors.
+6. Doesn't this approach become verbose and complex in large applications?
 
-- I prefer Service Object
-  
-If you're not heavily invested into interactors this may not be for you.
-I love the chaining interactors provide. 
-I love the contracts. 
-I love the simplicity of the interface.
-I love the way they can be composed. 
-I love the way they can be tested.
+While it may appear so, this method shines in large-scale applications with numerous interactors. It simplifies locating and modifying the necessary interactors, which is often a cumbersome process.
 
-When I've used service objects, I've found them to be more complex to test and compose.
-I can't see a clean way that using service objects to compose interactors could work well without losing some of the aforementioned benefits.
+7. What if I prefer using Service Objects?
 
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/interactify.
-
+That's completely valid. Service Objects have their merits, but this gem is particularly useful for those deeply engaged with interactors. It capitalizes on the chaining, contracts, simplicity, composability, and testability that interactors offer. Combining Service Objects with interactors might not retain these advantages as effectively.
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
