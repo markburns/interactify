@@ -68,17 +68,25 @@ RSpec.describe Interactify::Promising do
 
     def it_raises_an_error
       expect { described_class.validate(interactor, *promising) }
-        .to raise_error  do |err|
-          expect(err).to be_a Interactify::MismatchingPromiseError
-
-          expect(err.message).to eq <<~MSG.chomp
-            #{interactor} does not promise:
-            #{Array(promising).sort}
-
-            Actual promises are:
-            #{Array(promised_keys).sort}
-          MSG
+        .to raise_error do |err|
+          expect_raised_error(err)
         end
+    end
+
+    def expect_raised_error(err)
+      expect(err).to be_a Interactify::MismatchingPromiseError
+
+      expect_error_message(err)
+    end
+
+    def expect_error_message(err)
+      expect(err.message).to eq <<~MSG.chomp
+        #{interactor} does not promise:
+        #{Array(promising).sort}
+
+        Actual promises are:
+        #{Array(promised_keys).sort}
+      MSG
     end
 
     def it_returns_true

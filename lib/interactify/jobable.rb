@@ -58,13 +58,13 @@ module Interactify
         # with WhateverInteractor::Job you can perform the interactor as a job
         # from sidekiq
         # e.g. WhateverInteractor::Job.perform_async(...)
-        const_set("Job#{klass_suffix}", job_maker.job_class)
+        const_set("Job#{klass_suffix}", job_maker.job_klass)
 
         # with WhateverInteractor::Async you can call WhateverInteractor::Job
         # in an organizer oro on its oen using normal interactor call call! semantics
         # e.g. WhateverInteractor::Async.call(...)
         #      WhateverInteractor::Async.call!(...)
-        const_set("Async#{klass_suffix}", job_maker.async_job_class)
+        const_set("Async#{klass_suffix}", job_maker.async_job_klass)
       end
 
       # if this was defined in ExampleClass this creates the following class
@@ -85,7 +85,7 @@ module Interactify
       def job_calling(method_name:, opts: {}, klass_suffix: "")
         job_maker = JobMaker.new(container_klass: self, opts:, method_name:, klass_suffix:)
 
-        const_set("Job#{klass_suffix}", job_maker.job_class)
+        const_set("Job#{klass_suffix}", job_maker.job_klass)
       end
     end
   end

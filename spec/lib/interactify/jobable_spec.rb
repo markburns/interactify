@@ -82,29 +82,29 @@ RSpec.describe Interactify::Jobable do
   end
 
   context "with an async interactor" do
-    let(:job_class) { self.class::TestAsyncInteractor::Job }
+    let(:job_klass) { self.class::TestAsyncInteractor::Job }
     let(:async_class) { self.class::TestAsyncInteractor::Async }
 
     before do
-      allow(job_class).to receive(:perform_async)
+      allow(job_klass).to receive(:perform_async)
     end
 
     it "can make an async interactor job" do
       async_class.call(a: 2, b: 4)
 
-      expect(job_class).to have_received(:perform_async).with("a" => 2, "b" => 4)
+      expect(job_klass).to have_received(:perform_async).with("a" => 2, "b" => 4)
     end
 
     it "ignores the unexpected arguments from the context" do
       async_class.call(a: 2, b: 4, some_unexpected_arg: Object.new)
 
-      expect(job_class).to have_received(:perform_async).with("a" => 2, "b" => 4)
+      expect(job_klass).to have_received(:perform_async).with("a" => 2, "b" => 4)
     end
 
     it "supports optional args" do
       async_class.call(a: 2, b: 4, c: 6)
 
-      expect(job_class).to have_received(:perform_async).with("a" => 2, "b" => 4, "c" => 6)
+      expect(job_klass).to have_received(:perform_async).with("a" => 2, "b" => 4, "c" => 6)
     end
   end
 

@@ -71,7 +71,7 @@ RSpec.describe "Interactify.promising" do
     it "raises a loadtime error when a promise is not matching" do
       this = self
 
-      expect do
+      expect_class_definition = expect do
         Class.new do
           include Interactify
 
@@ -79,7 +79,9 @@ RSpec.describe "Interactify.promising" do
             this.k(:A).promising(:a),
             this.k(:B).promising(:c)
         end
-      end.to raise_error(Interactify::MismatchingPromiseError) do |error|
+      end
+
+      expect_class_definition.to raise_error(Interactify::MismatchingPromiseError) do |error|
         expect(error.message).to eq <<~MESSAGE.chomp
           #{k(:B)} does not promise:
           [:c]
