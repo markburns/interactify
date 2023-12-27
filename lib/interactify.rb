@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
-require 'interactor'
-require 'interactor-contracts'
-require 'rails'
-require 'active_support/all'
+require "interactor"
+require "interactor-contracts"
+require "rails"
+require "active_support/all"
 
-require 'interactify/version'
-require 'interactify/contract_helpers'
-require 'interactify/dsl'
-require 'interactify/interactor_wiring'
+require "interactify/version"
+require "interactify/contract_helpers"
+require "interactify/dsl"
+require "interactify/interactor_wiring"
+require "interactify/promising"
 
 module Interactify
   extend ActiveSupport::Concern
@@ -16,6 +17,12 @@ module Interactify
   class << self
     def validate_app(ignore: [])
       Interactify::InteractorWiring.new(root: Interactify.configuration.root, ignore:).validate_app
+    end
+
+    def reset
+      @on_contract_breach = nil
+      @before_raise_hook = nil
+      @configuration = nil
     end
 
     def trigger_contract_breach_hook(...)
@@ -75,11 +82,34 @@ module Interactify
     interactor_job
   end
 
+  class_methods do
+    def promising(*args)
+      Promising.validate(self, *args)
+    end
+
+    def promised_keys
+      _interactify_extract_keys(contract.promises)
+    end
+
+    def expected_keys
+      _interactify_extract_keys(contract.expectations)
+    end
+
+    private
+
+    # this is the most brittle part of the code, relying on
+    # interactor-contracts internals
+    # so extracted it to here so change is isolated
+    def _interactify_extract_keys(clauses)
+      clauses.instance_eval { @terms }.json&.rules&.keys
+    end
+  end
+
   class Configuration
     attr_writer :root
 
     def root
-      @root ||= Rails.root / 'app'
+      @root ||= Rails.root / "app"
     end
   end
 

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
 module Interactify
-  VERSION = "0.2.0-alpha.1"
+  class ContractFailure < ::Interactor::Failure
+  end
 end

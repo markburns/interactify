@@ -1,5 +1,7 @@
-require 'interactify/each_chain'
-require 'interactify/if_interactor'
+# frozen_string_literal: true
+
+require "interactify/each_chain"
+require "interactify/if_interactor"
 
 module Interactify
   module Dsl

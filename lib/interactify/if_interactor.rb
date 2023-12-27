@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Interactify
   class IfInteractor
     attr_reader :condition, :success_interactor, :failure_interactor, :evaluating_receiver
@@ -56,7 +58,7 @@ module Interactify
     end
 
     def if_klass_name
-      name = condition.is_a?(Proc) ? 'Proc' : condition
+      name = condition.is_a?(Proc) ? "Proc" : condition
 
       "If#{name.to_s.camelize}".to_sym
     end

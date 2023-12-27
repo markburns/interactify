@@ -275,6 +275,30 @@ Interactor::Failure
 , tasks=[], contract_failures={:tasks=>["tasks must be filled"]}>
 ```
 
+### Promising
+You can annotate your interactors in the organize arguments with their promises.
+This then acts as executable documentation that is validated at load time and enforced to stay in sync with the interactor.
+
+A writer of an organizer may quite reasonably expect `LoadOrder` to promise `:order`, but for the reader, it's not always as immediately obvious
+which interactor in the chain is responsible for provides which key.
+
+```ruby
+organize \
+  LoadOrder.promising(:order), 
+  TakePayment.promising(:payment_transaction)
+```
+
+This will be validated at load time against the interactors promises.
+An example of a failure would be:
+
+```
+SomeOrganizer::DoStep1 does not promise:
+step_1
+
+Actual promises are:
+step1
+```
+
 
 ### Interactor wiring specs
 Sometimes you have an interactor chain that fails because something is expected deeper down the chain and not provided further up the chain. 

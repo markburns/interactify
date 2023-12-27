@@ -1,0 +1,23 @@
+AllCops:
+  NewCops: enable
+  Exclude:
+    - 'spec/fixtures/**/*'
+    - 'tmp/**/*'
+    - '.git/**/*'
+    - 'bin/*'
+Style/ClassAndModuleChildren:
+  Exclude: 
+    - 'spec/**/*'
+Metrics/BlockLength:
+  Exclude: 
+    - 'spec/**/*'
+    - '*.gemspec'
+Metrics/MethodLength:
+  Enabled: false
+Lint/ConstantDefinitionInBlock:
+  Exclude: 
+    - 'spec/**/*'
+Style/Documentation:
+  Enabled: false
+Style/StringLiterals:
+  EnforcedStyle: double_quotes

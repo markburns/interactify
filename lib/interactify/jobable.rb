@@ -1,4 +1,6 @@
-require 'interactify/job_maker'
+# frozen_string_literal: true
+
+require "interactify/job_maker"
 
 module Interactify
   module Jobable
@@ -18,7 +20,7 @@ module Interactify
 
         to_call = defined?(super_klass::Async) ? :interactor_job : :job_calling
 
-        klass.send(to_call, opts: opts, method_name: jobable_method_name)
+        klass.send(to_call, opts:, method_name: jobable_method_name)
         super(klass)
       end
     end
@@ -51,18 +53,18 @@ module Interactify
       # obviously you will need to be aware that later interactors
       # in an interactor chain cannot depend on the result of the async
       # interactor
-      def interactor_job(method_name: :call!, opts: {}, klass_suffix: '')
+      def interactor_job(method_name: :call!, opts: {}, klass_suffix: "")
         job_maker = JobMaker.new(container_klass: self, opts:, method_name:, klass_suffix:)
         # with WhateverInteractor::Job you can perform the interactor as a job
         # from sidekiq
         # e.g. WhateverInteractor::Job.perform_async(...)
-        const_set("Job#{klass_suffix}", job_maker.job_class)
+        const_set("Job#{klass_suffix}", job_maker.job_klass)
 
         # with WhateverInteractor::Async you can call WhateverInteractor::Job
         # in an organizer oro on its oen using normal interactor call call! semantics
         # e.g. WhateverInteractor::Async.call(...)
         #      WhateverInteractor::Async.call!(...)
-        const_set("Async#{klass_suffix}", job_maker.async_job_class)
+        const_set("Async#{klass_suffix}", job_maker.async_job_klass)
       end
 
       # if this was defined in ExampleClass this creates the following class
@@ -80,10 +82,10 @@ module Interactify
       # # the following class is created that you can use to enqueue a job
       # in the sidekiq yaml file
       # ExampleClass::Job.some_method
-      def job_calling(method_name:, opts: {}, klass_suffix: '')
+      def job_calling(method_name:, opts: {}, klass_suffix: "")
         job_maker = JobMaker.new(container_klass: self, opts:, method_name:, klass_suffix:)
 
-        const_set("Job#{klass_suffix}", job_maker.job_class)
+        const_set("Job#{klass_suffix}", job_maker.job_klass)
       end
     end
   end

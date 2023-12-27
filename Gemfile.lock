@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    interactify (0.1.0.pre.alpha.1)
+    interactify (0.2.0.pre.alpha.1)
       interactor
       interactor-contracts
       rails

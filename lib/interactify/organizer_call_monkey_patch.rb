@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Interactify
   module OrganizerCallMonkeyPatch
     extend ActiveSupport::Concern
@@ -30,8 +32,11 @@ module Interactify
     def call
       self.class.organized.each do |interactor|
         instance = interactor.new(context)
-        instance.instance_variable_set(:@_interactor_called_by_non_bang_method,
-                                       @_interactor_called_by_non_bang_method)
+
+        instance.instance_variable_set(
+          :@_interactor_called_by_non_bang_method,
+          @_interactor_called_by_non_bang_method
+        )
 
         instance.tap(&:run!)
       end
