@@ -12,7 +12,7 @@ However, I'm open to the idea of making it more focused and making these more pl
 
 ## Installation
 
-```Gemfile
+```ruby
 gem 'interactify'
 ```
 
@@ -39,6 +39,9 @@ end
 ```ruby
 # e.g. in spec/supoort/interactify.rb
 require 'interactify/rspec/matchers'
+
+expect(described_class).to expect_inputs(:foo, :bar, :baz)
+expect(described_class).to promise_outputs(:fee, :fi, :fo, :fum)
 ```
 
 ### Syntactic Sugar
