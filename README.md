@@ -410,35 +410,42 @@ end
 Yes I agree. It's early days and I'm open to syntax improvement ideas. This is really about it being conceptually less ugly than the alternative, which is to jump around between lots of files. In the existing alternative to using this gem the ugliness is not within each individual file, but within the overall hidden architecture and the hunting process of jumping around in complex interactor chains. We can't see that ugliness but we probably experience it. If you don't feel or experience that ugliness then this gem may not be the right fit for you.
 
 
-- Is this interactor/interactor-contracts compatible? 
+- Is this interactor/interactor-contracts compatible?
+- 
 Yes and we use them as dependencies. It's possible we'd drop those dependencies in the future but unlikely. I think it's highly likely we'd retain compatibility.
 
 
 - Why not propose changes to the interactor or interactor-contracts gem?
+
 Honestly, I think both are great and why we've built on top of them. 
 I presume they'd object to such an extensive opinionated change, and I think that would be the right decision too.
 If this becomes more stable, less coupled to Rails, there's interest, and things we can provide upstream I'd be happy to propose changes to those gems.
 
 - Isn't this all just syntactic sugar?
+
 Yes, but it's sugar that makes the code easier to read and understand.
 
 - Is it really easier to parse this new DSL/syntax than POROs?
+  
 That's subjective, but I think so. The benefit is you have fewer extraneous files patching over a common problem in interactors.
 
 - But it gets really verbose and complex!
+  
 Again this is subjective, but if you've worked with apps with hundred or thousands of interactors, you'll have encountered these problems.
 I think when we work with interactors we're in one of two modes. 
 Hunting to find the interactor we need to change, or working on the interactor we need to change.
 This makes the first step much easier. 
 The second step has always been a great experience with interactors.
 
-- I prefer Service Objects
+- I prefer Service Object
+  
 If you're not heavily invested into interactors this may not be for you.
 I love the chaining interactors provide. 
 I love the contracts. 
 I love the simplicity of the interface.
 I love the way they can be composed. 
 I love the way they can be tested.
+
 When I've used service objects, I've found them to be more complex to test and compose.
 I can't see a clean way that using service objects to compose interactors could work well without losing some of the aforementioned benefits.
 
