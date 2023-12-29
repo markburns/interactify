@@ -19,13 +19,16 @@ module Interactify
       end
 
       def run!(context)
-        result = condition.is_a?(Proc) ? condition.call(context) : context.send(condition)
+        interactor = truthy_path?(context) ? success_interactor : failure_interactor
 
-        interactor = result ? success_interactor : failure_interactor
         interactor.respond_to?(:call!) ? interactor.call!(context) : interactor&.call(context)
       end
 
       private
+
+      def truthy_path?(context)
+        condition.is_a?(Proc) ? condition.call(context) : context.send(condition)
+      end
 
       def attach_source_location
         attach do |_klass, this|
