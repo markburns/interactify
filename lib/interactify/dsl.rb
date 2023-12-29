@@ -22,12 +22,14 @@ module Interactify
       )
     end
 
-    def if(condition, succcess_interactor, failure_interactor = nil)
+    def if(condition, succcess_interactor, failure_interactor = nil); end
+
+    def if(condition, succcess_arg, failure_arg = nil)
       IfInteractor.attach_klass(
         self,
         condition,
-        succcess_interactor,
-        failure_interactor
+        succcess_arg,
+        failure_arg
       )
     end
 
