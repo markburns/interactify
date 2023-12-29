@@ -5,6 +5,41 @@ RSpec.describe Interactify do
     expect(Interactify::VERSION).not_to be nil
   end
 
+  describe ".validate_app" do
+    before do
+      wiring = instance_double(Interactify::Wiring, validate_app: 'ok')
+
+      expect(Interactify::Wiring)
+        .to receive(:new)
+        .with(root: Interactify.configuration.root, ignore:)
+        .and_return(wiring)
+    end
+
+    context "with an ignore" do
+      let(:ignore) { %w[foo bar] }
+
+      it "validates the app" do
+        expect(Interactify.validate_app(ignore:)).to eq("ok")
+      end
+    end
+
+    context "with nil ignore" do
+      let(:ignore) { nil }
+
+      it "validates the app" do
+        expect(Interactify.validate_app(ignore:)).to eq("ok")
+      end
+    end
+
+    context "with empty ignore" do
+      let(:ignore) { [] }
+
+      it "validates the app" do
+        expect(Interactify.validate_app(ignore:)).to eq("ok")
+      end
+    end
+  end
+
   describe ".reset" do
     context "with a before raise hook" do
       before do
