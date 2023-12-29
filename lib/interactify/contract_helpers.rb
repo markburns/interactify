@@ -55,7 +55,7 @@ module Interactify
     end
 
     class SetupContract
-      def self.setup(context, meth, attrs, filled, should_delegate=true)
+      def self.setup(context, meth, attrs, filled, should_delegate = true)
         new(context, attrs, filled, should_delegate)
           .setup(meth)
       end
