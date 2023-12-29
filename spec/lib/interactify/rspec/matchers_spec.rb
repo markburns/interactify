@@ -17,8 +17,8 @@ RSpec.describe "rspec matchers" do
     it "shows failure messages" do
       expect { expect(k(:A)).to expect_inputs(:b) }.to raise_error do |error|
         expect(error.message).to include("SomeNamespace::A to expect inputs [:b]")
-        expect(error.message).to include("missing inputs: [:b]")
-        expect(error.message).to include("extra inputs: [:a]")
+        expect(error.message).to include("missing: [:b]")
+        expect(error.message).to include("extra: [:a]")
       end
     end
 
@@ -38,8 +38,8 @@ RSpec.describe "rspec matchers" do
     it "shows failure messages" do
       expect { expect(k(:A)).to promise_outputs(:b) }.to raise_error do |error|
         expect(error.message).to include("SomeNamespace::A to promise outputs [:b]")
-        expect(error.message).to include("missing outputs: [:b]")
-        expect(error.message).to include("extra outputs: []")
+        expect(error.message).to include("missing: [:b]")
+        expect(error.message).not_to include("extra: []")
       end
     end
     it "works with vanilla interactors without blowing up" do
@@ -57,8 +57,8 @@ RSpec.describe "rspec matchers" do
     it "shows failure messages" do
       expect { expect(k(:O)).to organize_interactors(k(:B), k(:P)) }.to raise_error do |error|
         expect(error.message).to include("SomeNamespace::O to organize interactors [#{k(:B)}, #{k(:P)}]")
-        expect(error.message).to include("missing interactors: [#{k(:P)}]")
-        expect(error.message).to include("extra interactors: [#{k(:A)}]")
+        expect(error.message).to include("missing: [#{k(:P)}]")
+        expect(error.message).to include("extra: [#{k(:A)}]")
       end
     end
   end

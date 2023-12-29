@@ -7,7 +7,7 @@ require "active_support/all"
 require "interactify/version"
 require "interactify/contract_helpers"
 require "interactify/dsl"
-require "interactify/interactor_wiring"
+require "interactify/wiring"
 require "interactify/promising"
 
 module Interactify
@@ -51,7 +51,7 @@ rescue LoadError
 end
 
 begin
-  require 'rails/railtie'
+  require "rails/railtie"
 rescue LoadError
   Interactify.railties_missing!
 end
@@ -62,14 +62,6 @@ module Interactify
   class << self
     def validate_app(ignore: [])
       Interactify::InteractorWiring.new(root: Interactify.configuration.root, ignore:).validate_app
-    end
-
-    def sidekiq_missing?
-      @sidekiq_missing
-    end
-
-    def sidekiq_missing!
-      @sidekiq_missing = true
     end
 
     def reset

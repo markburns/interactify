@@ -2,12 +2,12 @@
 
 require "active_support/all"
 
-require "interactify/interactor_wiring/callable_representation"
-require "interactify/interactor_wiring/constants"
-require "interactify/interactor_wiring/files"
+require "interactify/wiring/callable_representation"
+require "interactify/wiring/constants"
+require "interactify/wiring/files"
 
 module Interactify
-  class InteractorWiring
+  class Wiring
     attr_reader :root, :ignore
 
     def initialize(root:, ignore: [])

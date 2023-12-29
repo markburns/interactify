@@ -4,6 +4,7 @@ require "interactify/jobable"
 require "interactify/call_wrapper"
 require "interactify/organizer"
 require "interactify/contract_failure"
+require "interactify/setup_contract"
 
 module Interactify
   module ContractHelpers
@@ -11,14 +12,11 @@ module Interactify
 
     class_methods do
       def expect(*attrs, filled: true)
-        expects do
-          attrs.each do |attr|
-            field = required(attr)
-            field.filled if filled
-          end
-        end
+        SetupContract.setup_expects(context: self, attrs:, filled:)
+      end
 
-        delegate(*attrs, to: :context)
+      def promise(*attrs, filled: true, should_delegate: true)
+        SetupContract.setup_promises(context: self, attrs:, filled:, should_delegate:)
       end
 
       def optional(*attrs)
@@ -29,17 +27,6 @@ module Interactify
       end
 
       attr_reader :optional_attrs
-
-      def promise(*attrs, filled: true, should_delegate: true)
-        promises do
-          attrs.each do |attr|
-            field = required(attr)
-            field.filled if filled
-          end
-        end
-
-        delegate(*attrs, to: :context) if should_delegate
-      end
     end
 
     included do

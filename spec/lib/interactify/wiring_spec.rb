@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Interactify::InteractorWiring do
+RSpec.describe Interactify::Wiring do
   subject do
     described_class.new(
       root: File.expand_path(root)

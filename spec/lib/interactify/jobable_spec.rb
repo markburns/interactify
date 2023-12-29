@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 if Interactify.sidekiq?
   # rubocop:disable Naming/MethodParameterName
   RSpec.describe Interactify::Jobable do

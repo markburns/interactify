@@ -8,10 +8,12 @@ gemspec
 gem "rake", "~> 13.0"
 
 group :development do
-  gem 'bundler', '~> 2.0'
+  gem "appraisal"
+  gem "bundler", "~> 2.0"
 end
 
 group :test do
-  gem "simplecov", require: false
+  gem "debug"
   gem "rspec", "~> 3.0"
+  gem "simplecov", require: false
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 appraise "railties-7-sidekiq" do
   gem "railties", "7"
   gem "sidekiq", "7"

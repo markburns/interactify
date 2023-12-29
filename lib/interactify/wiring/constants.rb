@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Interactify
-  class InteractorWiring
+  class Wiring
     class Constants
       attr_reader :root, :organizer_files, :interactor_files
 

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "interactify/interactor_wiring/error_context"
+require "interactify/wiring/error_context"
 
 module Interactify
-  class InteractorWiring
+  class Wiring
     class CallableRepresentation
       attr_reader :filename, :klass, :wiring
 
