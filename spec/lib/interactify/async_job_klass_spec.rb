@@ -91,6 +91,9 @@ RSpec.describe Interactify::AsyncJobKlass do
         result = subject.send(:restrict_to_optional_or_keys_from_contract, args)
 
         expect(result).to eq("foo" => "bar")
+
+        result = subject.send(:restrict_to_optional_or_keys_from_contract, {"baz" => 1, "extra" => 2})
+        expect(result).to eq("baz" => 1)
       end
     end
   end
