@@ -20,6 +20,7 @@
 
 - Fixed to work with and make optional dependencies for sidekiq and railties. Confirmed as working with ruby >= 3.1.4
 
-## [0.3.1-RC1] - 2023-12-29
+## [0.4.0-RC1] - 2023-12-29
 
 - All internal restructuring/refactoring into domains. 
+- Add support for organize `self.if(:condition, then: A, else: B)` syntax
