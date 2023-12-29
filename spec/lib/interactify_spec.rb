@@ -46,7 +46,8 @@ RSpec.describe Interactify do
           .from(instance_of(Interactify::Configuration))
           .to(nil)
 
-        expect(described_class.configuration.root).to eq(Pathname.new("spec/example_app/app"))
+        path = Interactify.railties? ? Pathname.new("spec/example_app/app") : nil
+        expect(described_class.configuration.root).to eq(path)
       end
     end
   end

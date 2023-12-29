@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require "sidekiq"
-require "sidekiq/job"
-
 require "interactify/async_job_klass"
+require "interactify/null_job"
 
 module Interactify
   class JobMaker
@@ -24,6 +22,8 @@ module Interactify
       private
 
       def define_job_klass
+        return NullJob if Interactify.sidekiq_missing?
+
         this = self
 
         invalid_keys = this.opts.symbolize_keys.keys - %i[queue retry dead backtrace pool tags]

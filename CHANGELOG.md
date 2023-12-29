@@ -15,3 +15,8 @@
 ## [0.3.0-alpha.2] - 2023-12-29
 
 - Remove deep_matching development dependency
+
+## [0.3.0-RC1] - 2023-12-29
+
+- Fixed to work with and make optional dependencies for sidekiq and railties. Confirmed as working with ruby >= 3.1.4
+

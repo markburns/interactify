@@ -10,7 +10,7 @@ module Interactify
   class InteractorWiring
     attr_reader :root, :ignore
 
-    def initialize(root: Rails.root, ignore: [])
+    def initialize(root:, ignore: [])
       @root = root.to_s.gsub(%r{/$}, "")
       @ignore = ignore
     end

@@ -11,6 +11,8 @@ module Interactify
     #
     # then let's make sure to define Klass::Job separately
     included do |base|
+      next if Interactify.sidekiq_missing?
+
       def base.inherited(klass)
         super_klass = klass.superclass
         super_job = super_klass::Job # really spiffing

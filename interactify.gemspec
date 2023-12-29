@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
 
   spec.homepage = "https://github.com/markburns/interactify"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 3.2"
+  spec.required_ruby_version = ">= 2.7.8"
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
@@ -43,8 +43,8 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "interactor"
   spec.add_dependency "interactor-contracts"
-  spec.add_dependency "rails"
-  spec.add_dependency "sidekiq"
+  spec.add_dependency "activesupport", ">= 6.0.0"
   spec.add_development_dependency "debug"
+  spec.add_development_dependency "appraisal"
   spec.metadata["rubygems_mfa_required"] = "true"
 end

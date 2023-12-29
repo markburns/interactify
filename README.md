@@ -1,6 +1,18 @@
 # Interactify
 
-Interactify enhances Rails applications by simplifying complex interactor chains. This gem builds on [interactors](https://github.com/collectiveidea/interactor) and [interactor-contracts](https://github.com/michaelherold/interactor-contracts) to improve readability and maintainability of business logic. It's optimized for Rails projects using Sidekiq, offering advanced features for chain management and debugging. Interactify is about making interactor usage in Rails more efficient and less error-prone, reducing the overhead of traditional interactor orchestration.
+[![Gem Version](https://badge.fury.io/rb/interactify.svg)](https://badge.fury.io/rb/interactify)
+![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=markburns/interactify)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+![Ruby 3.3.0](https://img.shields.io/badge/ruby-3.3.0-green.svg)
+![Ruby 3.2.2](https://img.shields.io/badge/ruby-3.2.2-green.svg)
+![Ruby 3.1.4](https://img.shields.io/badge/ruby-3.1.4-green.svg)
+![Code Climate](https://codeclimate.com/github/markburns/interactify/badges/gpa.svg)(https://codeclimate.com/github/markburns/interactify)
+
+Interactify enhances Rails applications by simplifying complex interactor chains. 
+This gem builds on [interactors](https://github.com/collectiveidea/interactor) and [interactor-contracts](https://github.com/michaelherold/interactor-contracts) to improve readability and maintainability of business logic. 
+We depend on activesupport, and optionally on railties and sidekiq. So it's a good fit for Rails projects using Sidekiq, offering advanced features for chain management and debugging. 
+Interactify is about making interactor usage in Rails more efficient and less error-prone, reducing the overhead of traditional interactor orchestration.
+
 ## Installation
 
 ```ruby
@@ -10,6 +22,7 @@ gem 'interactify'
 ## Usage
 
 ### Initializer
+
 ```ruby
 # in config/initializers/interactify.rb
 Interactify.configure do |config|

@@ -2,7 +2,6 @@
 
 require "interactor"
 require "interactor-contracts"
-require "rails"
 require "active_support/all"
 
 require "interactify/version"
@@ -12,11 +11,65 @@ require "interactify/interactor_wiring"
 require "interactify/promising"
 
 module Interactify
+  def self.railties_missing?
+    @railties_missing
+  end
+
+  def self.railties_missing!
+    @railties_missing = true
+  end
+
+  def self.railties
+    railties?
+  end
+
+  def self.railties?
+    !railties_missing?
+  end
+
+  def self.sidekiq_missing?
+    @sidekiq_missing
+  end
+
+  def self.sidekiq_missing!
+    @sidekiq_missing = true
+  end
+
+  def self.sidekiq
+    sidekiq?
+  end
+
+  def self.sidekiq?
+    !sidekiq_missing?
+  end
+end
+
+begin
+  require "sidekiq"
+rescue LoadError
+  Interactify.sidekiq_missing!
+end
+
+begin
+  require 'rails/railtie'
+rescue LoadError
+  Interactify.railties_missing!
+end
+
+module Interactify
   extend ActiveSupport::Concern
 
   class << self
     def validate_app(ignore: [])
       Interactify::InteractorWiring.new(root: Interactify.configuration.root, ignore:).validate_app
+    end
+
+    def sidekiq_missing?
+      @sidekiq_missing
+    end
+
+    def sidekiq_missing!
+      @sidekiq_missing = true
     end
 
     def reset
@@ -109,7 +162,11 @@ module Interactify
     attr_writer :root
 
     def root
-      @root ||= Rails.root / "app"
+      @root ||= fallback
+    end
+
+    def fallback
+      Rails.root / "app" if Interactify.railties?
     end
   end
 
