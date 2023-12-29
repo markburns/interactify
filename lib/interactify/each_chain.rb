@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'interactify/unique_klass_name'
 
 module Interactify
   class EachChain
@@ -59,8 +60,10 @@ module Interactify
     # rubocop:enable all
 
     def attach_klass
-      namespace.const_set(iterator_klass_name, klass)
-      namespace.const_get(iterator_klass_name)
+      name = iterator_klass_name
+
+      namespace.const_set(name, klass)
+      namespace.const_get(name)
     end
 
     def namespace
@@ -68,7 +71,9 @@ module Interactify
     end
 
     def iterator_klass_name
-      :"Each#{singular_resource_name.to_s.camelize}".to_sym
+      prefix = "Each#{singular_resource_name.to_s.camelize}"
+
+      UniqueKlassName.for(namespace, prefix)
     end
 
     def singular_resource_name

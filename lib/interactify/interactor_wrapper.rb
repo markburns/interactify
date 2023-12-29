@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'interactify/unique_klass_name'
 
 module Interactify
   class InteractorWrapper
@@ -35,23 +36,8 @@ module Interactify
     def wrap_chain
       return self.class.wrap(organizer, interactor.first) if interactor.length == 1
 
+      klass_name = UniqueKlassName.for(organizer, 'Chained')
       organizer.chain(klass_name, *interactor.map { self.class.wrap(organizer, _1) })
-    end
-
-    def klass_name
-      id = generate_unique_id
-      klass_name = :"Chained#{id}"
-
-      while organizer.const_defined?(klass_name)
-        id = generate_unique_id
-        klass_name = :"Chained#{id}"
-      end
-
-      klass_name
-    end
-
-    def generate_unique_id
-      rand(10_000)
     end
 
     def wrap_conditional
