@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Interactify do
-  include DeepMatching
-
   describe ".expect" do
     class DummyInteractorClass
       include Interactify
@@ -76,7 +74,7 @@ RSpec.describe Interactify do
 
           outputted_failures = JSON.parse(e.message)
 
-          expect_deep_matching(outputted_failures, failures[:contract_failures])
+          expect(outputted_failures.symbolize_keys).to eq(failures[:contract_failures].symbolize_keys)
         end
 
         expect(@some_context).to eq NOISY_CONTEXT.symbolize_keys

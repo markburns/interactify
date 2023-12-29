@@ -46,6 +46,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rails"
   spec.add_dependency "sidekiq"
   spec.add_development_dependency "debug"
-  spec.add_development_dependency "deep_matching"
   spec.metadata["rubygems_mfa_required"] = "true"
 end
