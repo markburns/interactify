@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Interactify::UniqueKlassName do
+RSpec.describe Interactify::Dsl::UniqueKlassName do
   describe ".for" do
     it "generates a unique class name" do
       first_name = described_class.for(SpecSupport, "Whatever")

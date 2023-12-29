@@ -5,10 +5,11 @@ require "interactor-contracts"
 require "active_support/all"
 
 require "interactify/version"
-require "interactify/contract_helpers"
+require "interactify/contracts/helpers"
+require "interactify/contracts/promising"
 require "interactify/dsl"
 require "interactify/wiring"
-require "interactify/promising"
+require "interactify/configuration"
 
 module Interactify
   def self.railties_missing?
@@ -102,7 +103,7 @@ module Interactify
 
     base.include Interactor::Organizer
     base.include Interactor::Contracts
-    base.include Interactify::ContractHelpers
+    base.include Interactify::Contracts::Helpers
 
     # defines two classes on the receiver class
     # the first is the job class
@@ -123,43 +124,8 @@ module Interactify
     # that calls the interactor ExampleInteractor with (foo: 'bar')
     #
     # ExampleInteractor::Async.call(foo: 'bar')
-    include Interactify::Jobable
+    include Interactify::Async::Jobable
     interactor_job
-  end
-
-  class_methods do
-    def promising(*args)
-      Promising.validate(self, *args)
-    end
-
-    def promised_keys
-      _interactify_extract_keys(contract.promises)
-    end
-
-    def expected_keys
-      _interactify_extract_keys(contract.expectations)
-    end
-
-    private
-
-    # this is the most brittle part of the code, relying on
-    # interactor-contracts internals
-    # so extracted it to here so change is isolated
-    def _interactify_extract_keys(clauses)
-      clauses.instance_eval { @terms }.json&.rules&.keys
-    end
-  end
-
-  class Configuration
-    attr_writer :root
-
-    def root
-      @root ||= fallback
-    end
-
-    def fallback
-      Rails.root / "app" if Interactify.railties?
-    end
   end
 
   def called_klass_list

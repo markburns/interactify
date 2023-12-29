@@ -77,7 +77,7 @@ RSpec.describe "Interactify.promising" do
         end
       end
 
-      expect_class_definition.to raise_error(Interactify::MismatchingPromiseError) do |error|
+      expect_class_definition.to raise_error(Interactify::Contracts::MismatchingPromiseError) do |error|
         expect(error.message).to eq <<~MESSAGE.chomp
           #{k(:B)} does not promise:
           [:c]
