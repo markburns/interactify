@@ -6,7 +6,7 @@
 ![Ruby 3.3.0](https://img.shields.io/badge/ruby-3.3.0-green.svg)
 ![Ruby 3.2.2](https://img.shields.io/badge/ruby-3.2.2-green.svg)
 ![Ruby 3.1.4](https://img.shields.io/badge/ruby-3.1.4-green.svg)
-![Code Climate](https://codeclimate.com/github/markburns/interactify/badges/gpa.svg)(https://codeclimate.com/github/markburns/interactify)
+[![Code Climate](https://codeclimate.com/github/markburns/interactify/badges/gpa.svg)](https://codeclimate.com/github/markburns/interactify)
 
 Interactify enhances Rails applications by simplifying complex interactor chains. 
 This gem builds on [interactors](https://github.com/collectiveidea/interactor) and [interactor-contracts](https://github.com/michaelherold/interactor-contracts) to improve readability and maintainability of business logic. 
