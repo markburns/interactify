@@ -24,3 +24,4 @@
 
 - All internal restructuring/refactoring into domains. 
 - Add support for organize `self.if(:condition, then: A, else: B)` syntax
+- change location of matchers to `require 'interactify/rspec_matchers/matchers'`
