@@ -38,7 +38,7 @@ module Interactify
             context[this.singular_resource_name] = resource                           #       context.package = package
             context[this.singular_resource_index_name] = index                        #       context.package_index = index
 
-            klasses = self.class.wrap_lambdas_in_interactors(this.each_loop_klasses)
+            klasses = InteractorWrapper.wrap_many(self, this.each_loop_klasses)
 
             klasses.each do |interactor|                                              #       [A, B, C].each do |interactor|
               interactor.call!(context)                                               #         interactor.call!(context)

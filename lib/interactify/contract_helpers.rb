@@ -2,7 +2,7 @@
 
 require "interactify/jobable"
 require "interactify/call_wrapper"
-require "interactify/organizer_call_monkey_patch"
+require "interactify/organizer"
 require "interactify/contract_failure"
 
 module Interactify
@@ -48,7 +48,7 @@ module Interactify
       # failure class:  Whatever::SomeInteractor::InteractorContractFailure
       const_set "InteractorContractFailure", c
       prepend CallWrapper
-      include OrganizerCallMonkeyPatch if ancestors.include? Interactor::Organizer
+      include Organizer
 
       on_breach do |breaches|
         breaches = breaches.map { |b| { b.property => b.messages } }.inject(&:merge)

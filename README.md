@@ -213,6 +213,14 @@ class OuterThing
     SetupStep,
     self.if(->(c){ c.thing == 'a' }, DoThingA, DoThingB),
 end
+
+# or hash syntax
+class OuterThing
+  # ... boilerplate ...
+  organize \
+    {if: :key_set_on_context, then: DoThingA, else: DoThingB},
+    AfterBothCases
+end
 ```
 
 ### Conditionals with a key from the context 
