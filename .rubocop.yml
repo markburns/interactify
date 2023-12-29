@@ -1,6 +1,7 @@
 AllCops:
   NewCops: enable
   Exclude:
+    - 'gemfiles/**/*'
     - 'spec/fixtures/**/*'
     - 'tmp/**/*'
     - '.git/**/*'
