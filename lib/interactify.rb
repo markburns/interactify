@@ -62,7 +62,7 @@ module Interactify
 
   class << self
     def validate_app(ignore: [])
-      Interactify::InteractorWiring.new(root: Interactify.configuration.root, ignore:).validate_app
+      Interactify::Wiring.new(root: Interactify.configuration.root, ignore:).validate_app
     end
 
     def reset
