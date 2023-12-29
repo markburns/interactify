@@ -11,3 +11,7 @@
 ## [0.3.0-alpha.1] - 2023-12-29
 
 - Added support for `{if: :condition, then: A, else: B}` in organizers
+
+## [0.3.0-alpha.2] - 2023-12-29
+
+- Remove deep_matching development dependency

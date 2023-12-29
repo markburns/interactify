@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "interactify"
-require "deep_matching"
 require "rails"
 require "sidekiq/testing"
 require "debug"
