@@ -43,8 +43,8 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "interactor"
   spec.add_dependency "interactor-contracts"
-  spec.add_dependency "rails"
-  spec.add_dependency "sidekiq"
+  spec.add_dependency "rails", ">= 6.0.0"
   spec.add_development_dependency "debug"
+  spec.add_development_dependency "appraisal"
   spec.metadata["rubygems_mfa_required"] = "true"
 end

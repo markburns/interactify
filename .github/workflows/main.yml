@@ -10,11 +10,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Ruby ${{ matrix.ruby }}
+    name: Ruby ${{ matrix.ruby }} - ${{ matrix.appraisal }}
     strategy:
+      fail-fast: false
       matrix:
         ruby:
+          - '3.3.0'
           - '3.2.2'
+          - '3.1.4'
+          - '2.7.8'
+        appraisal:
+          - 'rails-7-sidekiq-6'
+          - 'rails-6-sidekiq-5'
 
     steps:
     - uses: actions/checkout@v3
@@ -23,5 +30,7 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
-    - name: Run the specs
-      run: bundle exec rake spec
+    - name: Install Appraisal Gems
+      run: bundle exec appraisal install
+    - name: Run the specs for Appraisal
+      run: bundle exec appraisal ${{ matrix.appraisal }} rake spec

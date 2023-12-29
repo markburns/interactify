@@ -2,7 +2,6 @@
 
 require "interactor"
 require "interactor-contracts"
-require "rails"
 require "active_support/all"
 
 require "interactify/version"
