@@ -10,4 +10,6 @@ SimpleCov.start do
 
   add_group "Wiring", "lib/interactify/interactor_wiring"
   add_group "RSpec matchers", "lib/interactify/rspec"
+
+  coverage_dir "coverage/#{ENV['RUBY_VERSION']}-#{ENV['APPRAISAL']}"
 end
