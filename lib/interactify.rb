@@ -7,7 +7,7 @@ require "active_support/all"
 require "interactify/version"
 require "interactify/contract_helpers"
 require "interactify/dsl"
-require "interactify/interactor_wiring"
+require "interactify/wiring"
 require "interactify/promising"
 
 module Interactify

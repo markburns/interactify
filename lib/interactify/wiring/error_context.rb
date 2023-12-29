@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Interactify
-  class InteractorWiring
+  class Wiring
     class ErrorContext
       def previously_defined_keys
         @previously_defined_keys ||= Set.new
