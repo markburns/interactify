@@ -224,26 +224,16 @@ class OuterThing
   # ... boilerplate ...
   organize \
     SetupStep,
+
+    # lambda conditional
     self.if(->(c){ c.thing == 'a' }, DoThingA, DoThingB),
-end
 
-# or hash syntax
-class OuterThing
-  # ... boilerplate ...
-  organize \
+    # context conditional
+    self.if(:some_key_on_context, DoThingA, DoThingB),
+
+    # alternative hash syntax
     {if: :key_set_on_context, then: DoThingA, else: DoThingB},
-    AfterBothCases
-end
-```
-
-### Conditionals with a key from the context 
-
-```ruby
-class OuterThing
-  # ... boilerplate ...
-  organize \
-    self.if(:key_set_on_context, DoThingA, DoThingB),
-    AfterBothCases
+    AfterDoThis
 end
 ```
 
@@ -263,6 +253,7 @@ class SomeOrganizer
 end
 
 ```
+
 ### Contract validation failures
 Sometimes contract validation fails at runtime as an exception. It's something unexpected and you'll have an `Interactor::Failure` sent to rollbar/sentry/honeybadger.
 If the context is large it's often hard to spot what the actual problem is or where it occurred.
@@ -310,7 +301,6 @@ step_1
 Actual promises are:
 step1
 ```
-
 
 ### Interactor wiring specs
 Sometimes you have an interactor chain that fails because something is expected deeper down the chain and not provided further up the chain. 
