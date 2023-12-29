@@ -1,6 +1,10 @@
 # Interactify
 
-Interactify enhances Rails applications by simplifying complex interactor chains. This gem builds on [interactors](https://github.com/collectiveidea/interactor) and [interactor-contracts](https://github.com/michaelherold/interactor-contracts) to improve readability and maintainability of business logic. It's optimized for Rails projects using Sidekiq, offering advanced features for chain management and debugging. Interactify is about making interactor usage in Rails more efficient and less error-prone, reducing the overhead of traditional interactor orchestration.
+Interactify enhances Rails applications by simplifying complex interactor chains. 
+This gem builds on [interactors](https://github.com/collectiveidea/interactor) and [interactor-contracts](https://github.com/michaelherold/interactor-contracts) to improve readability and maintainability of business logic. 
+We depend on activesupport, and optionally on railties and sidekiq. So it's a good fit for Rails projects using Sidekiq, offering advanced features for chain management and debugging. 
+Interactify is about making interactor usage in Rails more efficient and less error-prone, reducing the overhead of traditional interactor orchestration.
+
 ## Installation
 
 ```ruby
@@ -10,6 +14,7 @@ gem 'interactify'
 ## Usage
 
 ### Initializer
+
 ```ruby
 # in config/initializers/interactify.rb
 Interactify.configure do |config|
