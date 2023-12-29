@@ -351,17 +351,7 @@ expect(described_class).to promise_outputs(:order)
 ### Sidekiq Jobs
 Sometimes you want to asyncify an interactor.
 
-```ruby
-# before
-class SomeInteractor
-  include Interactify
-
-  def call
-    # ...
-  end
-end
-```
-
+#### before
 ```diff
 - SomeInteractor.call(*args)
 + class SomeInteractorJob
@@ -375,23 +365,13 @@ end
 + SomeInteractorJob.perform_async(*args)
 ```
 
-```ruby
-# after
-class SomeInteractor
-  include Interactify
-
-  def call
-    # ...
-  end
-end
-```
-
-No need to manually create a job class or handle the perform/call impedance mismatch
-
+#### after
 ```diff
 - SomeInteractor.call!(*args)
 + SomeInteractor::Async.call!(*args)
 ```
+
+No need to manually create a job class or handle the perform/call impedance mismatch
 
 This also makes it easy to add cron jobs to run interactors. As any interactor can be asyncified.
 By using it's internal Async class.
