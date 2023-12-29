@@ -1,31 +1,16 @@
 # frozen_string_literal: true
 
+require "interactify/interactor_wrapper"
+
 module Interactify
-  module OrganizerCallMonkeyPatch
+  module Organizer
     extend ActiveSupport::Concern
 
     class_methods do
       def organize(*interactors)
-        wrapped = wrap_lambdas_in_interactors(interactors)
+        wrapped = InteractorWrapper.wrap_many(self, interactors)
 
         super(*wrapped)
-      end
-
-      def wrap_lambdas_in_interactors(interactors)
-        Array(interactors).map do |interactor|
-          case interactor
-          when Proc
-            Class.new do
-              include Interactify
-
-              define_method(:call) do
-                interactor.call(context)
-              end
-            end
-          else
-            interactor
-          end
-        end
       end
     end
 

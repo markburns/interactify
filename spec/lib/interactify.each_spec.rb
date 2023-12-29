@@ -37,17 +37,17 @@ RSpec.describe Interactify do
 
     it "creates an interactor class that iterates over the given collection" do
       allow(SpecSupport).to receive(:const_set).and_wrap_original do |meth, name, klass|
-        expect(name).to eq(:EachThing)
+        expect(name).to match(/EachThing\d+\z/)
         expect(klass).to be_a(Class)
         expect(klass.ancestors).to include(Interactor)
         meth.call(name, klass)
       end
 
       klass = SpecSupport.each(:things, k(:A), k(:B), k(:C))
-      expect(klass.name).to eq("SpecSupport::EachThing")
+      expect(klass.name).to match(/SpecSupport::EachThing\d+\z/)
 
       file, line = klass.source_location
-      expect(file).to match %r{spec/support/spec_support_binding\.rb}
+      expect(file).to match %r{spec/support/spec_support\.rb}
       expect(line).to eq(3)
 
       result = klass.call!(things: [1, 2, 3])

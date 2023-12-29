@@ -2,6 +2,7 @@
 
 require "interactify/each_chain"
 require "interactify/if_interactor"
+require "interactify/unique_klass_name"
 
 module Interactify
   module Dsl
@@ -63,6 +64,7 @@ module Interactify
 
       # attach the class to the calling namespace
       where_to_attach = self.binding.receiver
+      klass_name = UniqueKlassName.for(where_to_attach, klass_name)
       where_to_attach.const_set(klass_name, klass)
     end
   end

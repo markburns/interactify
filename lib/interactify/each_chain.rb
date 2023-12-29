@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "interactify/unique_klass_name"
+
 module Interactify
   class EachChain
     attr_reader :each_loop_klasses, :plural_resource_name, :evaluating_receiver
@@ -38,7 +40,7 @@ module Interactify
             context[this.singular_resource_name] = resource                           #       context.package = package
             context[this.singular_resource_index_name] = index                        #       context.package_index = index
 
-            klasses = self.class.wrap_lambdas_in_interactors(this.each_loop_klasses)
+            klasses = InteractorWrapper.wrap_many(self, this.each_loop_klasses)
 
             klasses.each do |interactor|                                              #       [A, B, C].each do |interactor|
               interactor.call!(context)                                               #         interactor.call!(context)
@@ -59,8 +61,10 @@ module Interactify
     # rubocop:enable all
 
     def attach_klass
-      namespace.const_set(iterator_klass_name, klass)
-      namespace.const_get(iterator_klass_name)
+      name = iterator_klass_name
+
+      namespace.const_set(name, klass)
+      namespace.const_get(name)
     end
 
     def namespace
@@ -68,7 +72,9 @@ module Interactify
     end
 
     def iterator_klass_name
-      :"Each#{singular_resource_name.to_s.camelize}".to_sym
+      prefix = "Each#{singular_resource_name.to_s.camelize}"
+
+      UniqueKlassName.for(namespace, prefix)
     end
 
     def singular_resource_name

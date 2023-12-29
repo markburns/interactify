@@ -8,12 +8,7 @@ RSpec.describe Interactify do
       include Interactify
       expect :thing
       expect :this, filled: false
-
-      promise :another
-
-      def call
-        context.another = thing
-      end
+      def call; end
     end
 
     noisy_context = {}

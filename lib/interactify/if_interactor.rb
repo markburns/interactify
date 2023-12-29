@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "interactify/unique_klass_name"
+
 module Interactify
   class IfInteractor
     attr_reader :condition, :success_interactor, :failure_interactor, :evaluating_receiver
@@ -49,8 +51,9 @@ module Interactify
     # rubocop:enable all
 
     def attach_klass
-      namespace.const_set(if_klass_name, klass)
-      namespace.const_get(if_klass_name)
+      name = if_klass_name
+      namespace.const_set(name, klass)
+      namespace.const_get(name)
     end
 
     def namespace
@@ -58,9 +61,10 @@ module Interactify
     end
 
     def if_klass_name
-      name = condition.is_a?(Proc) ? "Proc" : condition
+      prefix = condition.is_a?(Proc) ? "Proc" : condition
+      prefix = "If#{prefix.to_s.camelize}"
 
-      "If#{name.to_s.camelize}".to_sym
+      UniqueKlassName.for(namespace, prefix)
     end
   end
 end
