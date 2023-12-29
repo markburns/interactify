@@ -4,8 +4,7 @@ require "simplecov"
 
 SimpleCov.start do
   add_group "Sidekiq jobs" do |src_file|
-    src_file.project_filename =~ %r{lib/interactify/job} ||
-      src_file.project_filename =~ %r{spec/lib/interactify/job}
+    src_file.project_filename =~ %r{lib/interactify/async}
   end
 
   add_group "Wiring", "lib/interactify/wiring"

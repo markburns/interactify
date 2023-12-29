@@ -45,6 +45,11 @@ module Interactify
   end
 end
 
+Interactify.instance_eval do
+  @sidekiq_missing = nil
+  @railties_missing = nil
+end
+
 begin
   require "sidekiq"
 rescue LoadError
