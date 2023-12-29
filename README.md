@@ -6,7 +6,7 @@
 ![Ruby 3.3.0](https://img.shields.io/badge/ruby-3.3.0-green.svg)
 ![Ruby 3.2.2](https://img.shields.io/badge/ruby-3.2.2-green.svg)
 ![Ruby 3.1.4](https://img.shields.io/badge/ruby-3.1.4-green.svg)
-![Code Climate](https://codeclimate.com/github/markburns/interactify/badges/gpa.svg)(https://codeclimate.com/github/markburns/interactify)
+[![Code Climate](https://codeclimate.com/github/markburns/interactify/badges/gpa.svg)](https://codeclimate.com/github/markburns/interactify)
 
 Interactify enhances Rails applications by simplifying complex interactor chains. 
 This gem builds on [interactors](https://github.com/collectiveidea/interactor) and [interactor-contracts](https://github.com/michaelherold/interactor-contracts) to improve readability and maintainability of business logic. 
@@ -224,26 +224,16 @@ class OuterThing
   # ... boilerplate ...
   organize \
     SetupStep,
+
+    # lambda conditional
     self.if(->(c){ c.thing == 'a' }, DoThingA, DoThingB),
-end
 
-# or hash syntax
-class OuterThing
-  # ... boilerplate ...
-  organize \
+    # context conditional
+    self.if(:some_key_on_context, DoThingA, DoThingB),
+
+    # alternative hash syntax
     {if: :key_set_on_context, then: DoThingA, else: DoThingB},
-    AfterBothCases
-end
-```
-
-### Conditionals with a key from the context 
-
-```ruby
-class OuterThing
-  # ... boilerplate ...
-  organize \
-    self.if(:key_set_on_context, DoThingA, DoThingB),
-    AfterBothCases
+    AfterDoThis
 end
 ```
 
@@ -263,6 +253,7 @@ class SomeOrganizer
 end
 
 ```
+
 ### Contract validation failures
 Sometimes contract validation fails at runtime as an exception. It's something unexpected and you'll have an `Interactor::Failure` sent to rollbar/sentry/honeybadger.
 If the context is large it's often hard to spot what the actual problem is or where it occurred.
@@ -311,7 +302,6 @@ Actual promises are:
 step1
 ```
 
-
 ### Interactor wiring specs
 Sometimes you have an interactor chain that fails because something is expected deeper down the chain and not provided further up the chain. 
 The existing way to solve this is with enough integration specs to catch them, hunting and sticking a `byebug`, `debugger` or `binding.pry` in at suspected locations and inferring where in the chain the wiring went awry.
@@ -351,17 +341,7 @@ expect(described_class).to promise_outputs(:order)
 ### Sidekiq Jobs
 Sometimes you want to asyncify an interactor.
 
-```ruby
-# before
-class SomeInteractor
-  include Interactify
-
-  def call
-    # ...
-  end
-end
-```
-
+#### before
 ```diff
 - SomeInteractor.call(*args)
 + class SomeInteractorJob
@@ -375,23 +355,13 @@ end
 + SomeInteractorJob.perform_async(*args)
 ```
 
-```ruby
-# after
-class SomeInteractor
-  include Interactify
-
-  def call
-    # ...
-  end
-end
-```
-
-No need to manually create a job class or handle the perform/call impedance mismatch
-
+#### after
 ```diff
 - SomeInteractor.call!(*args)
 + SomeInteractor::Async.call!(*args)
 ```
+
+No need to manually create a job class or handle the perform/call impedance mismatch
 
 This also makes it easy to add cron jobs to run interactors. As any interactor can be asyncified.
 By using it's internal Async class.
