@@ -40,9 +40,10 @@ end
 
 ### Using the RSpec matchers
 ```ruby
-# e.g. in spec/supoort/interactify.rb
-require 'interactify/rspec/matchers'
+# e.g. in spec/support/interactify.rb
+require 'interactify/rspec_matchers/matchers'
 
+# in specs
 expect(described_class).to expect_inputs(:foo, :bar, :baz)
 expect(described_class).to promise_outputs(:fee, :fi, :fo, :fum)
 ```
@@ -232,6 +233,12 @@ class OuterThing
 
     # alternative hash syntax
     {if: :key_set_on_context, then: DoThingA, else: DoThingB},
+
+    # method call with hash syntax, plus implicit chaining
+    self.if(:key_set_on_context, then: [A, B, C], else: [B, C, D]),
+
+    # method call with lambda, hash syntax, and implicit chaining
+    self.if(->(ctx) { ctx.this }, then: [A, B, C], else: [B, C, D]),
     AfterDoThis
 end
 ```

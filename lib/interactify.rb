@@ -45,6 +45,11 @@ module Interactify
   end
 end
 
+Interactify.instance_eval do
+  @sidekiq_missing = nil
+  @railties_missing = nil
+end
+
 begin
   require "sidekiq"
 rescue LoadError
@@ -62,7 +67,7 @@ module Interactify
 
   class << self
     def validate_app(ignore: [])
-      Interactify::InteractorWiring.new(root: Interactify.configuration.root, ignore:).validate_app
+      Interactify::Wiring.new(root: Interactify.configuration.root, ignore:).validate_app
     end
 
     def reset
