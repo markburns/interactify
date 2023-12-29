@@ -64,14 +64,6 @@ module Interactify
       Interactify::InteractorWiring.new(root: Interactify.configuration.root, ignore:).validate_app
     end
 
-    def sidekiq_missing?
-      @sidekiq_missing
-    end
-
-    def sidekiq_missing!
-      @sidekiq_missing = true
-    end
-
     def reset
       @on_contract_breach = nil
       @before_raise_hook = nil
