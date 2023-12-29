@@ -51,7 +51,7 @@ end
 
       actual_values = Array(actual.send(meth))
 
-      @contract_matcher = Interactify::RSpec::ContractMatcher.new(
+      @contract_matcher = Interactify::RSpecMatchers::ContractMatcher.new(
         actual,
         expected_values,
         actual_values,
