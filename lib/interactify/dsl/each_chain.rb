@@ -26,7 +26,7 @@ module Interactify
         this = self
 
         Class.new do                                                                    # class SomeNamespace::EachPackage
-          include Interactify                                          #   include Interactify
+          include Interactify                                                           #   include Interactify
 
           expects do                                                                    #   expects do
             required(this.plural_resource_name)                                         #     required(:packages)

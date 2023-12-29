@@ -22,12 +22,18 @@ module Interactify
       )
     end
 
-    def if(condition, succcess_interactor, failure_interactor = nil)
+    def if(condition, success_arg, failure_arg = nil)
+      then_else = if success_arg.is_a?(Hash) && failure_arg.nil?
+                    success_arg.slice(:then, :else)
+                  else
+                    { then: success_arg, else: failure_arg }
+                  end
+
       IfInteractor.attach_klass(
         self,
         condition,
-        succcess_interactor,
-        failure_interactor
+        then_else[:then],
+        then_else[:else]
       )
     end
 
