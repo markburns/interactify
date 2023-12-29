@@ -69,6 +69,7 @@ module Interactify
 
       def setup(meth)
         this = self
+
         @context.send(meth) do
           this.setup_attrs self
         end
