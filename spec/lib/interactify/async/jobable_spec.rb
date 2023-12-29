@@ -2,9 +2,9 @@
 
 if Interactify.sidekiq?
   # rubocop:disable Naming/MethodParameterName
-  RSpec.describe Interactify::Jobable do
+  RSpec.describe Interactify::Async::Jobable do
     class self::TestNoArgs
-      include Interactify::Jobable
+      include Interactify::Async::Jobable
 
       interactor_job
 
@@ -14,7 +14,7 @@ if Interactify.sidekiq?
     end
 
     class self::TestPositionalArgs
-      include Interactify::Jobable
+      include Interactify::Async::Jobable
 
       interactor_job
 
@@ -24,7 +24,7 @@ if Interactify.sidekiq?
     end
 
     class self::TestKeywordArgs
-      include Interactify::Jobable
+      include Interactify::Async::Jobable
 
       interactor_job
 

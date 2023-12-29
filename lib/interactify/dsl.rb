@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "interactify/each_chain"
-require "interactify/if_interactor"
-require "interactify/unique_klass_name"
+require "interactify/dsl/each_chain"
+require "interactify/dsl/if_interactor"
+require "interactify/dsl/unique_klass_name"
 
 module Interactify
   module Dsl

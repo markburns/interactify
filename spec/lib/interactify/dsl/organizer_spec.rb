@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Interactify::Organizer do
+RSpec.describe Interactify::Dsl::Organizer do
   self::DummyClass = Class.new do
     include Interactify
   end

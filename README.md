@@ -312,7 +312,7 @@ In order to detect these wiring issues, stick a spec in your test suite like thi
 ```ruby
 RSpec.describe 'InteractorWiring' do
   it 'validates the interactors in the whole app', :aggregate_failures do
-    errors = Interactify.validate_app(ignore: [/Priam/])
+    errors = Interactify.validate_app(ignore: [/SomeClassName/, AnotherClass, 'SomeClassNameString'])
 
     expect(errors).to eq ''
   end

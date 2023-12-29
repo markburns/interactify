@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "interactify/interactor_wrapper"
+require "interactify/dsl/wrapper"
 
-RSpec.describe Interactify::InteractorWrapper do
+RSpec.describe Interactify::Dsl::Wrapper do
   self::Organizer = Class.new { include Interactify }
   let(:organizer) { self.class::Organizer }
   let(:simple_interactor) { Class.new { include Interactify } }

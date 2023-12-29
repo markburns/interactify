@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe Interactify::Promising do
+require "interactify/contracts/promising"
+
+RSpec.describe Interactify::Contracts::Promising do
   describe ".validate" do
     let(:interactor) { double("interactor", promised_keys:) }
 
@@ -74,7 +76,7 @@ RSpec.describe Interactify::Promising do
     end
 
     def expect_raised_error(err)
-      expect(err).to be_a Interactify::MismatchingPromiseError
+      expect(err).to be_a Interactify::Contracts::MismatchingPromiseError
 
       expect_error_message(err)
     end

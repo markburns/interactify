@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Interactify::JobMaker do
+RSpec.describe Interactify::Async::JobMaker do
   let(:container_klass) { double("ContainerKlass", expected_keys:, promised_keys:, optional_attrs:) }
   let(:optional_attrs) { [] }
   let(:expected_keys) { [] }
@@ -46,7 +46,7 @@ RSpec.describe Interactify::JobMaker do
         it "returns a null job_klass" do
           job_klass = subject.job_klass
 
-          expect(job_klass).to eq(Interactify::NullJob)
+          expect(job_klass).to eq(Interactify::Async::NullJob)
         end
       end
     end

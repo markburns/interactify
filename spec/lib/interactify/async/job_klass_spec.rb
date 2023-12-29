@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Interactify::AsyncJobKlass do
+RSpec.describe Interactify::Async::JobKlass do
   let(:container_klass) { double("ContainerKlass", expected_keys:, promised_keys:, optional_attrs:) }
   let(:optional_attrs) { [] }
   let(:expected_keys) { [] }
