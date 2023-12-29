@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "interactify/dsl/unique_klass_name"
+require "interactify/dsl/if_klass"
 
 module Interactify
   module Dsl
@@ -30,33 +31,9 @@ module Interactify
       # allows us to dynamically create an interactor chain
       # that iterates over the packages and
       # uses the passed in each_loop_klasses
-      # rubocop:disable all
       def klass
-        this = self
-
-        klass_basis.tap do |k|
-          k.instance_eval do
-            expects do
-              required(this.condition) unless this.condition.is_a?(Proc)
-            end
-
-            define_singleton_method(:source_location) do
-              const_source_location this.evaluating_receiver.to_s                                     #     [file, line]
-            end
-
-            define_method(:run!) do
-              result = this.condition.is_a?(Proc) ? this.condition.call(context) : context.send(this.condition)
-              interactor = result ? this.success_interactor : this.failure_interactor
-              interactor&.respond_to?(:call!) ? interactor.call!(context) : interactor&.call(context)
-            end
-
-            define_method(:inspect) do
-              "<#{this.namespace}::#{this.if_klass_name} #{this.condition} ? #{this.success_interactor} : #{this.failure_interactor}>"
-            end
-          end
-        end
+        IfKlass.new(self).klass
       end
-      # rubocop:enable all
 
       # so we have something to attach subclasses to during building
       # of the outer class, before we finalize the outer If class
@@ -93,7 +70,7 @@ module Interactify
 
         case arg
         when Array
-          name = "If#{condition.to_s.camelize}#{truthiness ? "IsTruthy" : "IsFalsey"}"
+          name = "If#{condition.to_s.camelize}#{truthiness ? 'IsTruthy' : 'IsFalsey'}"
           klass_basis.chain(name, *arg)
         else
           arg

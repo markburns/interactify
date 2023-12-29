@@ -24,9 +24,11 @@ RSpec.describe Interactify::Dsl do
         )
       end
 
-      let(:on_success1) { ->(ctx) { 
-        ctx.success1 = true } 
-      }
+      let(:on_success1) do
+        lambda { |ctx|
+          ctx.success1 = true
+        }
+      end
       let(:on_success2) { ->(ctx) { ctx.success2 = true } }
 
       let(:on_failure1) { ->(ctx) { ctx.success1 = false } }
@@ -73,7 +75,6 @@ RSpec.describe Interactify::Dsl do
           expect(result.success2).to eq(false)
         end
       end
-
     end
   end
 end

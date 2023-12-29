@@ -7,7 +7,7 @@ RSpec.describe Interactify do
 
   describe ".validate_app" do
     before do
-      wiring = instance_double(Interactify::Wiring, validate_app: 'ok')
+      wiring = instance_double(Interactify::Wiring, validate_app: "ok")
 
       expect(Interactify::Wiring)
         .to receive(:new)
