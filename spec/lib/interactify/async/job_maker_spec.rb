@@ -46,7 +46,7 @@ RSpec.describe Interactify::Async::JobMaker do
         it "returns a null job_klass" do
           job_klass = subject.job_klass
 
-          expect(job_klass).to eq(Interactify::NullJob)
+          expect(job_klass).to eq(Interactify::Async::NullJob)
         end
       end
     end
