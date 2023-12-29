@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'interactify/unique_klass_name'
+
+require "interactify/unique_klass_name"
 
 module Interactify
   class InteractorWrapper
@@ -36,7 +37,7 @@ module Interactify
     def wrap_chain
       return self.class.wrap(organizer, interactor.first) if interactor.length == 1
 
-      klass_name = UniqueKlassName.for(organizer, 'Chained')
+      klass_name = UniqueKlassName.for(organizer, "Chained")
       organizer.chain(klass_name, *interactor.map { self.class.wrap(organizer, _1) })
     end
 

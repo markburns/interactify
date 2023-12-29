@@ -36,7 +36,7 @@ RSpec.describe Interactify::Organizer do
         end
       end
 
-      context 'when wrapping a conditional' do
+      context "when wrapping a conditional" do
         self::A = Class.new do
           include Interactify
 
@@ -60,7 +60,6 @@ RSpec.describe Interactify::Organizer do
           organizer.call(interactor_context)
         end
 
-
         let(:interactor_context) { { this: } }
         context "without an else" do
           let(:interactors) do
@@ -72,19 +71,19 @@ RSpec.describe Interactify::Organizer do
             ]
           end
 
-          context 'when the condition is true' do
+          context "when the condition is true" do
             let(:this) { true }
 
-            it 'runs the then interactor' do
+            it "runs the then interactor" do
               expect(result.a).to eq true
               expect(result.b).to eq nil
             end
           end
 
-          context 'when the condition is false' do
+          context "when the condition is false" do
             let(:this) { false }
 
-            it 'is a no-op' do
+            it "is a no-op" do
               expect(result.a).to eq nil
               expect(result.b).to eq nil
             end
@@ -101,19 +100,19 @@ RSpec.describe Interactify::Organizer do
             ]
           end
 
-          context 'when the condition is true' do
+          context "when the condition is true" do
             let(:this) { true }
 
-            it 'runs the then interactor' do
+            it "runs the then interactor" do
               expect(result.a).to eq true
               expect(result.b).to eq nil
             end
           end
 
-          context 'when the condition is false' do
+          context "when the condition is false" do
             let(:this) { false }
 
-            it 'runs the else interactor' do
+            it "runs the else interactor" do
               expect(result.a).to eq nil
               expect(result.b).to eq true
             end

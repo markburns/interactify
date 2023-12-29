@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Interactify
   module UniqueKlassName
     def self.for(namespace, prefix)

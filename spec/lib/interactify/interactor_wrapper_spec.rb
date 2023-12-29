@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 require "interactify/interactor_wrapper"
 
@@ -23,8 +25,8 @@ RSpec.describe Interactify::InteractorWrapper do
       end
     end
 
-    context 'when given a lambda' do
-      it 'wraps it in a class' do
+    context "when given a lambda" do
+      it "wraps it in a class" do
         executable = ->(context) { context.lambda = 123 }
         result = described_class.wrap_many(organizer, [executable]).first
         expect(result).not_to eq executable

@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 RSpec.describe Interactify::UniqueKlassName do
   describe ".for" do
     it "generates a unique class name" do
-      first_name = described_class.for(SpecSupport, 'Whatever')
+      first_name = described_class.for(SpecSupport, "Whatever")
       expect(first_name).to match(/Whatever\d+/)
       SpecSupport.const_set(first_name, Class.new)
 
-      second_name = described_class.for(SpecSupport, 'Whatever')
+      second_name = described_class.for(SpecSupport, "Whatever")
       expect(second_name).to match(/Whatever\d+/)
       expect(first_name).not_to eq(second_name)
     end

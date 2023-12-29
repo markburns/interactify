@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'interactify/unique_klass_name'
+
+require "interactify/unique_klass_name"
 
 module Interactify
   class EachChain
