@@ -20,8 +20,11 @@ jobs:
           - '3.1.4'
           - '2.7.8'
         appraisal:
-          - 'rails-7-sidekiq-6'
-          - 'rails-6-sidekiq-5'
+          - 'railties-7-sidekiq'
+          - 'railties-6-sidekiq'
+          - 'railties-7-no-sidekiq'
+          - 'railties-6-no-sidekiq'
+          - 'no-railties-no-sidekiq'
 
     steps:
     - uses: actions/checkout@v3

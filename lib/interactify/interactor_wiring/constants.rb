@@ -67,7 +67,7 @@ module Interactify
 
       def interactor_klass?(object)
         return unless object.is_a?(Class) && object.ancestors.include?(Interactor)
-        return if object.is_a?(Sidekiq::Job)
+        return if Interactify.sidekiq? && object.is_a?(Sidekiq::Job)
 
         true
       end
@@ -116,9 +116,9 @@ module Interactify
                 .gsub(root.to_s, "")   # "/namespace/sub_namespace/class_name.rb"
                 .gsub("/concerns", "") #  concerns directory is ignored by Zeitwerk
                 .split("/")            # "['', 'namespace', 'sub_namespace', 'class_name.rb']
-                .compact_blank         # "['namespace', 'sub_namespace', 'class_name.rb']
+                .reject(&:blank?)      # "['namespace', 'sub_namespace', 'class_name.rb']
                 .join("/")             # 'namespace/sub_namespace/class_name.rb'
-                .gsub(/\.rb\z/, "")     # 'namespace/sub_namespace/class_name'
+                .gsub(/\.rb\z/, "")    # 'namespace/sub_namespace/class_name'
       end
     end
   end
