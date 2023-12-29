@@ -47,7 +47,7 @@ RSpec.describe Interactify do
       expect(klass.name).to match(/SpecSupport::EachThing\d+\z/)
 
       file, line = klass.source_location
-      expect(file).to match %r{spec/support/spec_support_binding\.rb}
+      expect(file).to match %r{spec/support/spec_support\.rb}
       expect(line).to eq(3)
 
       result = klass.call!(things: [1, 2, 3])

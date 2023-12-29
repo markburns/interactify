@@ -26,9 +26,6 @@ RSpec.describe "Interactify.promising" do
         promise :a, :b, :c
 
         def call
-          context.a = "a"
-          context.b = "b"
-          context.c = "c"
         end
       end
 
