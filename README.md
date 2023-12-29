@@ -40,9 +40,10 @@ end
 
 ### Using the RSpec matchers
 ```ruby
-# e.g. in spec/supoort/interactify.rb
-require 'interactify/rspec/matchers'
+# e.g. in spec/support/interactify.rb
+require 'interactify/rspec_matchers/matchers'
 
+# in specs
 expect(described_class).to expect_inputs(:foo, :bar, :baz)
 expect(described_class).to promise_outputs(:fee, :fi, :fo, :fum)
 ```

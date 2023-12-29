@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "interactify/rspec/matchers"
+require "interactify/rspec_matchers/matchers"
 
 RSpec.describe "rspec matchers" do
   describe "expect_inputs" do

@@ -9,7 +9,7 @@ SimpleCov.start do
   end
 
   add_group "Wiring", "lib/interactify/wiring"
-  add_group "RSpec matchers", "lib/interactify/rspec"
+  add_group "RSpec matchers", "lib/interactify/rspec_matchers"
 
   coverage_dir "coverage/#{ENV.fetch('RUBY_VERSION', nil)}-#{ENV.fetch('APPRAISAL', nil)}"
 end
