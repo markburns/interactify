@@ -11,14 +11,11 @@ module Interactify
 
     class_methods do
       def expect(*attrs, filled: true)
-        expects do
-          attrs.each do |attr|
-            field = required(attr)
-            field.filled if filled
-          end
-        end
+        SetupContract.setup(self, :expects, attrs, filled)
+      end
 
-        delegate(*attrs, to: :context)
+      def promise(*attrs, filled: true, should_delegate: true)
+        SetupContract.setup(self, :promises, attrs, filled, should_delegate)
       end
 
       def optional(*attrs)
@@ -29,17 +26,6 @@ module Interactify
       end
 
       attr_reader :optional_attrs
-
-      def promise(*attrs, filled: true, should_delegate: true)
-        promises do
-          attrs.each do |attr|
-            field = required(attr)
-            field.filled if filled
-          end
-        end
-
-        delegate(*attrs, to: :context) if should_delegate
-      end
     end
 
     included do
@@ -64,6 +50,36 @@ module Interactify
           exception = c.new(breaches.to_json)
           Interactify.trigger_before_raise_hook(exception)
           raise exception
+        end
+      end
+    end
+
+    class SetupContract
+      def self.setup(context, meth, attrs, filled, should_delegate=true)
+        new(context, attrs, filled, should_delegate)
+          .setup(meth)
+      end
+
+      def initialize(context, attrs, filled, should_delegate)
+        @context = context
+        @attrs = attrs
+        @filled = filled
+        @should_delegate = should_delegate
+      end
+
+      def setup(meth)
+        this = self
+        @context.send(meth) do
+          this.setup_attrs self
+        end
+
+        @context.delegate(*@attrs, to: :context) if @should_delegate
+      end
+
+      def setup_attrs(contract)
+        @attrs.each do |attr|
+          field = contract.required(attr)
+          field.filled if @filled
         end
       end
     end
