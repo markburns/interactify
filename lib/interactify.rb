@@ -51,7 +51,7 @@ rescue LoadError
 end
 
 begin
-  require 'rails/railtie'
+  require "rails/railtie"
 rescue LoadError
   Interactify.railties_missing!
 end

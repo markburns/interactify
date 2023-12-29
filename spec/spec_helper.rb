@@ -12,9 +12,7 @@ Dir.glob("spec/support/**/*.rb").each { |f| require "./#{f}" }
 
 RSpec.configure do |config|
   config.before do
-    if Interactify.railties?
-      allow(Rails).to receive(:root).and_return(Pathname.new("spec/example_app"))
-    end
+    allow(Rails).to receive(:root).and_return(Pathname.new("spec/example_app")) if Interactify.railties?
   end
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"

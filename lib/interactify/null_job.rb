@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Interactify
   class NullJob
     def method_missing(...)
