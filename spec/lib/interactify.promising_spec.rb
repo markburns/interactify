@@ -25,8 +25,7 @@ RSpec.describe "Interactify.promising" do
         include Interactify
         promise :a, :b, :c
 
-        def call
-        end
+        def call; end
       end
 
       WithoutPromising = Class.new do
