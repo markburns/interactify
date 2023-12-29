@@ -7,6 +7,9 @@ gemspec
 
 gem "rake", "~> 13.0"
 
+group :development do
+  gem 'bundler', '~> 2.0'
+end
 
 group :test do
   gem "simplecov", require: false

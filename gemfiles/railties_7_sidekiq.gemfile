@@ -6,6 +6,10 @@ gem "rake", "~> 13.0"
 gem "railties", "7"
 gem "sidekiq", "7"
 
+group :development do
+  gem "bundler", "~> 2.0"
+end
+
 group :test do
   gem "simplecov", require: false
   gem "rspec", "~> 3.0"
