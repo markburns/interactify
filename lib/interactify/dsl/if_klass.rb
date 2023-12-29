@@ -62,9 +62,9 @@ module Interactify
         end
       end
 
-      def attach_method(name, &)
+      def attach_method(name, &block)
         attach do |klass, _this|
-          klass.define_method(name, &)
+          klass.define_method(name, &block)
         end
       end
 
