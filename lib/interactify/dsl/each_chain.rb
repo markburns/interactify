@@ -41,9 +41,7 @@ module Interactify
               context[this.singular_resource_name] = resource                           #       context.package = package
               context[this.singular_resource_index_name] = index                        #       context.package_index = index
 
-              klasses = Wrapper.wrap_many(self, this.each_loop_klasses)
-
-              klasses.each do |interactor|                                              #       [A, B, C].each do |interactor|
+              self.class.klasses.each do |interactor|                                   #       [A, B, C].each do |interactor|
                 interactor.call!(context)                                               #         interactor.call!(context)
               end                                                                       #       end
             end                                                                         #     end
@@ -54,6 +52,14 @@ module Interactify
             context                                                                     #     context
           end                                                                           #   end
 
+          define_singleton_method(:klasses) do                                          #   def self.klasses
+            klasses = instance_variable_get(:@klasses)                                  #     @klasses ||= Wrapper.wrap_many(self, [A, B, C])
+            return klasses if klasses
+
+            instance_variable_set(:@klasses, Wrapper.wrap_many(self, this.each_loop_klasses))
+          end
+
+          # "<SomeNamespace::EachPackage iterates_over: [A, B, C]>"
           define_method(:inspect) do
             "<#{this.namespace}::#{this.iterator_klass_name} iterates_over: #{this.each_loop_klasses.inspect}>"
           end
