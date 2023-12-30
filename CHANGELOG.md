@@ -25,3 +25,6 @@
 - All internal restructuring/refactoring into domains. 
 - Add support for organize `self.if(:condition, then: A, else: B)` syntax
 - change location of matchers to `require 'interactify/rspec_matchers/matchers'`
+
+## [0.4.1] - 2023-12-29
+- Fix bug triggered when nesting each and if

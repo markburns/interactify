@@ -33,7 +33,7 @@ module Interactify
           end                                                                           #   end
 
           define_singleton_method(:source_location) do                                  #   def self.source_location
-            const_source_location this.evaluating_receiver.to_s                                     #     [file, line]
+            const_source_location this.evaluating_receiver.to_s                         #     [file, line]
           end                                                                           #   end
 
           define_method(:run!) do                                                       #  def run!
