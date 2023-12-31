@@ -31,7 +31,7 @@ jobs:
     - name: Update README
       if: env.update_needed == 'true'
       run: |
-        sed -i 's/interactify.svg)/interactify.svg?$(date +%s))/' README.md
+        sed -i "s|https://badge.fury.io/rb/interactify.svg?[0-9]*|https://badge.fury.io/rb/interactify.svg?$(date +%s)|" README.md 
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add README.md .github/badge-cached.svg
