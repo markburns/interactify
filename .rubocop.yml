@@ -6,6 +6,9 @@ AllCops:
     - 'tmp/**/*'
     - '.git/**/*'
     - 'bin/*'
+Style/OpenStructUse:
+  Exclude:
+    - 'spec/integration/*'
 Style/ClassAndModuleChildren:
   Exclude: 
     - 'spec/**/*'

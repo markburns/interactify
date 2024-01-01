@@ -14,9 +14,9 @@ RSpec.describe "Interactify" do
   end
 
   before do
-    require_files("each/")
-    require_files("if/")
-    require_files("")
+    load_interactify_fixtures("each")
+    load_interactify_fixtures("if/")
+    load "./spec/fixtures/integration_app/app/interactors/all_the_things.rb"
   end
 
   context "without an optional thing" do
@@ -48,14 +48,6 @@ RSpec.describe "Interactify" do
 
       expect(result.counter).to eq 8
       expect(result.heavily_nested_counter).to eq 256
-    end
-  end
-
-  def require_files(dir)
-    files = Dir.glob("./spec/fixtures/integration_app/app/interactors/#{dir}**/*.rb")
-
-    files.each do |file|
-      require file
     end
   end
 end

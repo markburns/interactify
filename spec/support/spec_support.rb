@@ -2,4 +2,18 @@
 
 module SpecSupport
   include Interactify
+
+  module LoadInteractifyFixtures
+    def load_interactify_fixtures(sub_directory)
+      files = Dir.glob("./spec/fixtures/integration_app/app/interactors/#{sub_directory}/**/*.rb")
+
+      files.each do |file|
+        load file
+      end
+    end
+  end
+end
+
+RSpec.configure do |config|
+  config.include SpecSupport::LoadInteractifyFixtures
 end

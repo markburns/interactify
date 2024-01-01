@@ -4,6 +4,8 @@ require "interactify/async/jobable"
 require "interactify/contracts/call_wrapper"
 require "interactify/contracts/failure"
 require "interactify/contracts/setup"
+require "interactify/contracts/promising"
+require "interactify/contracts/organizing"
 require "interactify/dsl/organizer"
 
 module Interactify
@@ -11,6 +13,7 @@ module Interactify
     module Helpers
       extend ActiveSupport::Concern
 
+      # rubocop: disable Metrics/BlockLength
       class_methods do
         def expect(*attrs, filled: true)
           Setup.expects(context: self, attrs:, filled:)
@@ -22,6 +25,10 @@ module Interactify
 
         def promising(*args)
           Promising.validate(self, *args)
+        end
+
+        def organizing(*args)
+          Organizing.validate(self, *args)
         end
 
         def promised_keys
@@ -50,6 +57,7 @@ module Interactify
           clauses.instance_eval { @terms }.json&.rules&.keys
         end
       end
+      # rubocop: enable Metrics/BlockLength
 
       included do
         c = Class.new(Contracts::Failure)

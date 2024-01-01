@@ -8,11 +8,11 @@ RSpec.describe "Interactify.if" do
     end
   end
 
-  let(:thing_1) do
+  let(:thing1) do
     OpenStruct.new
   end
 
-  let(:thing_2) do
+  let(:thing2) do
     OpenStruct.new
   end
 
