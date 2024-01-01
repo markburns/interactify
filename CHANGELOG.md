@@ -28,3 +28,6 @@
 
 ## [0.4.1] - 2023-12-29
 - Fix bug triggered when nesting each and if
+
+## [0.5.0] - 2024-01-01
+- Add support for `SetA = Interactify { _1.a = 'a' }`, lambda and block class creation syntax

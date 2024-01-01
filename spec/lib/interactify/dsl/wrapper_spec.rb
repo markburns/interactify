@@ -84,4 +84,44 @@ RSpec.describe Interactify::Dsl::Wrapper do
       expect(wrapped_proc).to respond_to(:call)
     end
   end
+
+  context "via the Interactify callable global method" do
+    context "when given a block" do
+      let(:interactified) do
+        Interactify do |context|
+          context.interactified_via_block = true
+        end
+      end
+
+      it "returns an interactor that works" do
+        expect(interactified.call!.interactified_via_block).to eq true
+      end
+    end
+
+    context "when given a lambda" do
+      let(:interactified) do
+        Interactify(lambda do |context|
+          context.interactified_via_lambda = true
+        end)
+      end
+
+      it "returns an interactor that works" do
+        expect(interactified.call!.interactified_via_lambda).to eq true
+      end
+    end
+
+    context "when given another callable object" do
+      let(:interactified) do
+        Interactify(Class.new do
+          define_singleton_method(:call) do |context|
+            context.interactified_via_callable = true
+          end
+        end)
+      end
+
+      it "returns an interactor that works" do
+        expect(interactified.call!.interactified_via_callable).to eq true
+      end
+    end
+  end
 end
