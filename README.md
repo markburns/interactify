@@ -326,6 +326,54 @@ Actual promises are:
 step1
 ```
 
+### Organizing
+You can now annotate your interactors in the organize arguments with their sub-organizers' interactors. 
+This also serves as executable documentation, validated at load time, and is enforced to stay in sync.
+
+
+```ruby
+organize \
+  LoadOrder,
+  MarkAsPaid,
+  SendOutNotifications.organizing(
+    EmailUser,
+    SendPush,
+    NotifySomeThirdParty, 
+    SendOutNotifications::DoAnotherThing
+  )
+
+class SendOutNotifications
+  organize \
+    EmailUser,
+    SendPush,
+    NotifySomeThirdParty,
+    SetData = Interactify do |context|
+      context.data = {this: true}
+    end
+end
+```
+
+In this example, it might seem reasonable for an editor of SendOutNotifications to append SetData to the end of the chain. 
+However, the naming here is not ideal. 
+If it's generically named and not easily searchable, then the discoverability of the code is reduced.
+
+By invoking `.organizing` when the original author first uses `SendOutNotifications`, it encourages the subsequent editor to think about and document its own callers. 
+They may still choose to add `SetData` to the end of the chain, but this increases the chances of more easily finding where the data is changed.
+
+
+Example load time failure:
+```
+SendOutNotifications does not organize:
+[EmailUser, SendPush, NotifySomeThirdParty]
+
+Actual organized classes are:
+[EmailUser, SendPush, NotifySomeThirdParty, SendOutNotifications::SetData]
+
+Expected organized classes are:
+[SendOutNotifications::SetData]
+```
+
+
 ### Interactor wiring specs
 Sometimes you have an interactor chain that fails because something is expected deeper down the chain and not provided further up the chain. 
 The existing way to solve this is with enough integration specs to catch them, hunting and sticking a `byebug`, `debugger` or `binding.pry` in at suspected locations and inferring where in the chain the wiring went awry.
