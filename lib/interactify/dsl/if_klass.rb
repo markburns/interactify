@@ -19,13 +19,49 @@ module Interactify
       end
 
       def run!(context)
-        result = condition.is_a?(Proc) ? condition.call(context) : context.send(condition)
+        result = invoke_callable(context)
 
         interactor = result ? success_interactor : failure_interactor
         interactor.respond_to?(:call!) ? interactor.call!(context) : interactor&.call(context)
       end
 
       private
+
+      def invoke_callable(context)
+        return handle_string_or_symbol(context) if string_or_symbol_condition?
+        return handle_interactor_subclass(context) if interactor_subclass_condition?
+        return handle_proc_or_class(context) if proc_or_class_condition?
+
+        raise_unknown_condition_error
+      end
+
+      def string_or_symbol_condition?
+        condition.class.in?([String, Symbol])
+      end
+
+      def handle_string_or_symbol(context)
+        context.send(condition)
+      end
+
+      def interactor_subclass_condition?
+        condition.is_a?(Class) && condition < Interactor
+      end
+
+      def handle_interactor_subclass(context)
+        condition.new(context).call
+      end
+
+      def proc_or_class_condition?
+        condition.is_a?(Proc) || condition.is_a?(Class)
+      end
+
+      def handle_proc_or_class(context)
+        condition.call(context)
+      end
+
+      def raise_unknown_condition_error
+        raise "Unknown condition: #{condition.inspect}"
+      end
 
       def attach_source_location
         attach do |_klass, this|
@@ -38,7 +74,7 @@ module Interactify
       def attach_expectations
         attach do |klass, this|
           klass.expects do
-            required(this.condition) unless this.condition.is_a?(Proc)
+            required(this.condition) if this.condition.class.in?([String, Symbol])
           end
         end
       end
