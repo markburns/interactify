@@ -5,6 +5,8 @@ require "interactify/dsl/unique_klass_name"
 module Interactify
   module Dsl
     class EachChain
+      MissingIteratableValueInContext = Class.new(ArgumentError)
+
       attr_reader :each_loop_klasses, :plural_resource_name, :evaluating_receiver
 
       def self.attach_klass(evaluating_receiver, plural_resource_name, *each_loop_klasses)
@@ -37,6 +39,10 @@ module Interactify
           end                                                                           #   end
 
           define_method(:run!) do                                                       #  def run!
+            resources = context.send(this.plural_resource_name)                         #    packages = context.packages
+
+            bail_with_error(resources) unless resources.respond_to?(:each_with_index)   #    raise MissingIteratableValueInContext unless packages.respond_to?(:each_with_index)
+
             context.send(this.plural_resource_name).each_with_index do |resource, index|#    context.packages.each_with_index do |package, index|
               context[this.singular_resource_name] = resource                           #       context.package = package
               context[this.singular_resource_index_name] = index                        #       context.package_index = index
@@ -51,6 +57,11 @@ module Interactify
 
             context                                                                     #     context
           end                                                                           #   end
+
+          define_method(:bail_with_error) do |resources|
+            message = "Expected `context.#{this.plural_resource_name}`: #{resources.inspect}\nto respond to :each_with_index"
+            raise MissingIteratableValueInContext, message
+          end
 
           define_singleton_method(:klasses) do                                          #   def self.klasses
             klasses = instance_variable_get(:@klasses)                                  #     @klasses ||= Wrapper.wrap_many(self, [A, B, C])

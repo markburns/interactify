@@ -98,7 +98,7 @@ RSpec.describe Interactify::Dsl::IfKlass do
     end
 
     context "with a non matching string condition on the context" do
-      let(:condition) { 'another screen' }
+      let(:condition) { "another screen" }
 
       it "works" do
         klass = subject.klass
@@ -115,7 +115,7 @@ RSpec.describe Interactify::Dsl::IfKlass do
     end
 
     context "with a string condition on the context" do
-      let(:condition) { 'some_condition' }
+      let(:condition) { "some_condition" }
 
       it "works" do
         klass = subject.klass
