@@ -16,10 +16,10 @@ RSpec.describe "Interactify" do
   before do
     require_files("each/")
     require_files("if/")
-    require_files('')
+    require_files("")
   end
 
-  context 'without an optional thing' do
+  context "without an optional thing" do
     let(:result) { AllTheThings.promising(:a).call!(things:, optional_thing: false) }
 
     it "sets A and B, then lambda_set, then both_a_and_b, then first_more_thing, next_more_thing" do

@@ -10,6 +10,7 @@ require "interactify/contracts/promising"
 require "interactify/dsl"
 require "interactify/wiring"
 require "interactify/configuration"
+require "interactify/lambda_class_method"
 
 module Interactify
   def self.railties_missing?

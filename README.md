@@ -109,6 +109,24 @@ organize \
   Thing2
 ```
 
+Sometimes you also want a one liner but testability too.
+the `Interactify` method will take a block or a lambda and return an Interactify class.
+
+```ruby
+# passing a block
+DecorateOrder = Interactify do |context| 
+  context.order = context.order.decorate
+end
+
+# passing a lambda
+DecorateOrder = Interactify(some_lambda)
+
+# passing anything that responds to call
+# please note if you pass a class it will be instantiated first
+# so you can't pass a class with a constructor that takes arguments
+DecorateOrder = Interactify(callable_object)
+```
+
 ### Each/Iteration
 
 Sometimes we want an interactor for each item in a collection.
