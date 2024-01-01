@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    interactify (0.4.1)
+    interactify (0.5.0)
       activesupport (>= 6.0.0)
       interactor
       interactor-contracts
