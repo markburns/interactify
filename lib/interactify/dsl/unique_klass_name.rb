@@ -5,7 +5,7 @@ module Interactify
     module UniqueKlassName
       def self.for(namespace, prefix)
         id = generate_unique_id
-        klass_name = :"#{prefix}#{id}"
+        klass_name = :"#{prefix.to_s.camelize.gsub("::", "__")}#{id}"
 
         while namespace.const_defined?(klass_name)
           id = generate_unique_id
