@@ -74,7 +74,7 @@ module Interactify
       def attach_expectations
         attach do |klass, this|
           klass.expects do
-            required(this.condition) if this.condition.class.in?([String, Symbol])
+            required(this.condition.to_sym) if this.condition.class.in?([String, Symbol])
           end
         end
       end

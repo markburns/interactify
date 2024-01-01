@@ -97,6 +97,39 @@ RSpec.describe Interactify::Dsl::IfKlass do
       end
     end
 
+    context "with a non matching string condition on the context" do
+      let(:condition) { 'another screen' }
+
+      it "works" do
+        klass = subject.klass
+
+        result = klass.call(some_condition: true)
+
+        expect(result.success_invoked).to eq nil
+        expect(result.failure_invoked).to eq true
+
+        result = klass.call(some_condition: false)
+        expect(result.success_invoked).to eq nil
+        expect(result.failure_invoked).to eq true
+      end
+    end
+
+    context "with a string condition on the context" do
+      let(:condition) { 'some_condition' }
+
+      it "works" do
+        klass = subject.klass
+
+        result = klass.call(some_condition: true)
+
+        expect(result.success_invoked).to eq true
+
+        result = klass.call(some_condition: false)
+        expect(result.success_invoked).to eq nil
+        expect(result.failure_invoked).to eq true
+      end
+    end
+
     context "with a symbol condition on the context" do
       let(:condition) { :some_condition }
 
