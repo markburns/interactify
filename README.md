@@ -8,8 +8,11 @@
 [![Code Climate](https://codeclimate.com/github/markburns/interactify/badges/gpa.svg)](https://codeclimate.com/github/markburns/interactify)
 
 Interactify enhances Rails applications by simplifying complex interactor chains. 
+
 This gem builds on [interactors](https://github.com/collectiveidea/interactor) and [interactor-contracts](https://github.com/michaelherold/interactor-contracts) to improve readability and maintainability of business logic. 
-We depend on activesupport, and optionally on railties and sidekiq. So it's a good fit for Rails projects using Sidekiq, offering advanced features for chain management and debugging. 
+
+We depend on activesupport, and optionally on railties and sidekiq. So it's a good fit for Rails projects using Sidekiq, offering advanced features for chain management and debugging.
+
 Interactify is about making interactor usage in Rails more efficient and less error-prone, reducing the overhead of traditional interactor orchestration.
 
 ## Installation
@@ -115,9 +118,20 @@ organize LoadOrder, ->(context) { context.order = context.order.decorate }
 
 organize \
   Thing1, 
-  ->(c){ byebug if c.order.nil? },
+  ->(c){ byebug if c.order.nil? }, 
   Thing2
 ```
+
+
+> [!NOTE]
+> `organized` method calls that use this organizer will blow up when adding temporary lambdas for debugging. 
+> For now you can add custom error handling, using
+> 
+> ```ruby
+> Interactify.on_definition_error { |error| # do something other than raise }
+> ```
+> I'm considering removing plain lambdas that have not been assigned to a constant from the `organized` checks.
+> It wouldn't be possible to refer to a lambda within an `organized` call anyway. I'm open to suggestions here.
 
 ### More testable one line lambdas
 Sometimes you also want a one liner but testability too.
@@ -449,7 +463,8 @@ No need to manually create a job class or handle the perform/call impedance mism
 This also makes it easy to add cron jobs to run interactors. As any interactor can be asyncified.
 By using it's internal Async class.
 
-N.B. as your class is now executing asynchronously you can no longer rely on its promises later on in the chain.
+> [!CAUTION]
+> As your class is now executing asynchronously you can no longer rely on its promises later on in the chain.
 
 ## FAQs
 - This is ugly isn't it?
