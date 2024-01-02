@@ -6,6 +6,9 @@ require "interactify/dsl/unique_klass_name"
 
 module Interactify
   module Dsl
+    Error = Class.new(::ArgumentError)
+    IfDefinitionUnexpectedKey = Class.new(Error)
+
     # creates a class in the attach_klass_to's namespace
     # e.g.
     #
@@ -15,25 +18,27 @@ module Interactify
     # will create a class called Orders::EachPackage, that
     # will call the interactor chain A, B, C for each package in the context
     def each(plural_resource_name, *each_loop_klasses)
+      caller_info = caller(1..1).first
+
       EachChain.attach_klass(
         self,
-        plural_resource_name,
-        *each_loop_klasses
+        *each_loop_klasses,
+        caller_info:,
+        plural_resource_name:,
       )
     end
 
     def if(condition, success_arg, failure_arg = nil)
-      then_else = if success_arg.is_a?(Hash) && failure_arg.nil?
-                    success_arg.slice(:then, :else)
-                  else
-                    { then: success_arg, else: failure_arg }
-                  end
+      then_else = parse_if_args(condition, success_arg, failure_arg)
+
+      caller_info = caller(1..1).first
 
       IfInteractor.attach_klass(
         self,
         condition,
         then_else[:then],
-        then_else[:else]
+        then_else[:else],
+        caller_info:
       )
     end
 
