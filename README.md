@@ -119,6 +119,7 @@ organize \
   Thing2
 ```
 
+### More testable one line lambdas
 Sometimes you also want a one liner but testability too.
 the `Interactify` method will take a block or a lambda and return an Interactify class.
 
