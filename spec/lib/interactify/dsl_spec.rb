@@ -20,8 +20,10 @@ RSpec.describe Interactify::Dsl do
           slot,
           :condition,
           :success,
-          :failure
+          :failure,
+          caller_info: an_instance_of(String)
         )
+
       end
 
       let(:on_success1) do

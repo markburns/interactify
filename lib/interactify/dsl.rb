@@ -59,7 +59,8 @@ module Interactify
     # it will attach the generate class to the currenct class and
     # use the class name passed in
     # rubocop:disable all
-    def chain(klass_name, *chained_klasses, expect: [])
+    def chain(klass_name, *chained_klasses, expect: [], caller_info: nil)
+      caller_info ||= caller(1..1).first
       expectations = expect
 
       klass = Class.new do                             # class EvaluatingNamespace::SomeClass
@@ -67,7 +68,7 @@ module Interactify
         expect(*expectations) if expectations.any?     #   expect :foo, :bar
 
         define_singleton_method(:source_location) do   #   def self.source_location
-          source_location                              #     [file, line]
+          caller_info                                  #     [file, line]
         end                                            #   end
 
         organize(*chained_klasses)                     #   organize(A, B, C)
@@ -78,5 +79,21 @@ module Interactify
       klass_name = UniqueKlassName.for(where_to_attach, klass_name)
       where_to_attach.const_set(klass_name, klass)
     end
+
+    private
+
+    def parse_if_args(condition, success_arg, failure_arg)
+      then_else = if success_arg.is_a?(Hash) && failure_arg.nil?
+                    extra_keys = success_arg.except(:then, :else)
+
+                    if extra_keys.any?
+                      raise IfDefinitionUnexpectedKey, "Unexpected keys: #{extra_keys.keys.join(", ")}"
+                    end
+
+                    success_arg.slice(:then, :else)
+                  else
+                    { then: success_arg, else: failure_arg }
+                  end
+      end
   end
 end

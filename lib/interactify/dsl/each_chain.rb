@@ -7,17 +7,21 @@ module Interactify
     class EachChain
       MissingIteratableValueInContext = Class.new(ArgumentError)
 
-      attr_reader :each_loop_klasses, :plural_resource_name, :evaluating_receiver
+      attr_reader :each_loop_klasses, :plural_resource_name, :evaluating_receiver, :caller_info
 
-      def self.attach_klass(evaluating_receiver, plural_resource_name, *each_loop_klasses)
-        iteratable = new(each_loop_klasses, plural_resource_name, evaluating_receiver)
+      def self.attach_klass(evaluating_receiver, 
+                            *each_loop_klasses,
+                            plural_resource_name:,
+                            caller_info:)
+        iteratable = new(each_loop_klasses, plural_resource_name, evaluating_receiver, caller_info:)
         iteratable.attach_klass
       end
 
-      def initialize(each_loop_klasses, plural_resource_name, evaluating_receiver)
+      def initialize(each_loop_klasses, plural_resource_name, evaluating_receiver, caller_info:)
         @each_loop_klasses = each_loop_klasses
         @plural_resource_name = plural_resource_name
         @evaluating_receiver = evaluating_receiver
+        @caller_info = caller_info
       end
 
       # allows us to dynamically create an interactor chain
@@ -35,7 +39,10 @@ module Interactify
           end                                                                           #   end
 
           define_singleton_method(:source_location) do                                  #   def self.source_location
-            const_source_location this.evaluating_receiver.to_s                         #     [file, line]
+            file, line = this.caller_info&.split(':') 
+            return const_source_location(this.evaluating_receiver.to_s) if file.nil?
+
+            [file, line&.to_i]
           end                                                                           #   end
 
           define_method(:run!) do                                                       #  def run!
