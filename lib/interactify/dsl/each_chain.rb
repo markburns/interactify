@@ -9,7 +9,7 @@ module Interactify
 
       attr_reader :each_loop_klasses, :plural_resource_name, :evaluating_receiver, :caller_info
 
-      def self.attach_klass(evaluating_receiver, 
+      def self.attach_klass(evaluating_receiver,
                             *each_loop_klasses,
                             plural_resource_name:,
                             caller_info:)

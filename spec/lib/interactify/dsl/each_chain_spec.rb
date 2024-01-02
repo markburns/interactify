@@ -2,8 +2,10 @@
 
 RSpec.describe Interactify::Dsl::EachChain do
   describe ".attach_klass" do
-    let(:chain) { Interactify::Dsl::EachChain.attach_klass(SpecSupport, [k(:A), k(:B)], plural_resource_name: :things, caller_info:) }
-    let(:caller_info) { '/some/path/to/file.rb:123' }
+    let(:chain) do
+      Interactify::Dsl::EachChain.attach_klass(SpecSupport, [k(:A), k(:B)], plural_resource_name: :things, caller_info:)
+    end
+    let(:caller_info) { "/some/path/to/file.rb:123" }
 
     it "attaches a new class to the passed in context" do
       expect(chain.name).to match(/SpecSupport::EachThing\d+/)

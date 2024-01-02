@@ -5,16 +5,16 @@ RSpec.describe Interactify do
     expect(Interactify::VERSION).not_to be nil
   end
 
-  describe '.trigger_definition_error' do
-    context 'with the definition error handler set' do
+  describe ".trigger_definition_error" do
+    context "with the definition error handler set" do
       before do
         Interactify.on_definition_error do |error|
           "foo: #{error}"
         end
       end
 
-      it 'triggers the handler' do
-        expect(Interactify.trigger_definition_error('some_error')).to eq('foo: some_error')
+      it "triggers the handler" do
+        expect(Interactify.trigger_definition_error("some_error")).to eq("foo: some_error")
       end
     end
   end

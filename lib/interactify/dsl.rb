@@ -24,7 +24,7 @@ module Interactify
         self,
         *each_loop_klasses,
         caller_info:,
-        plural_resource_name:,
+        plural_resource_name:
       )
     end
 

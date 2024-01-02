@@ -72,7 +72,7 @@ RSpec.describe "Interactify.organizing" do
       expect(k(:ValidOrganizing).call!.b).to eq("b")
     end
 
-    context 'with invalid organizing assertions' do
+    context "with invalid organizing assertions" do
       before do
         @errors = []
 
