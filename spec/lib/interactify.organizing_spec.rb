@@ -72,21 +72,33 @@ RSpec.describe "Interactify.organizing" do
       expect(k(:ValidOrganizing).call!.b).to eq("b")
     end
 
-    it "raises a loadtime error when a organize is not matching" do
-      this = self
+    context 'with invalid organizing assertions' do
+      before do
+        @errors = []
 
-      expect_class_definition = expect do
-        Class.new do
-          include Interactify
-
-          organize \
-            this.k(:A).organizing(this.k(:B)),
-            this.k(:B).organizing(this.k(:D))
+        Interactify.on_definition_error do |err|
+          @errors << err
         end
       end
 
-      expect_class_definition.to raise_error(Interactify::Contracts::MismatchingOrganizerError) do |error|
-        expect(error.message).to eq <<~MESSAGE.chomp
+      it "raises a loadtime error when a organize is not matching" do
+        this = self
+
+        expect_class_definition = lambda do
+          Class.new do
+            include Interactify
+
+            organize \
+              this.k(:A).organizing(this.k(:B)),
+              this.k(:B).organizing(this.k(:D))
+          end
+        end
+
+        expect_class_definition.call
+        error = @errors[0]
+        expect(error).to be_a Interactify::Contracts::MismatchingOrganizerError
+
+        expect(error.message.strip).to eq <<~MESSAGE.strip
           #{k(:B)} does not organize:
           [#{k(:D)}]
 

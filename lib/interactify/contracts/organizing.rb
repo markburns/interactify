@@ -21,7 +21,9 @@ module Interactify
       def validate
         return if organizing == organized
 
-        raise MismatchingOrganizerError.new(interactor, organizing, organized)
+        Interactify.trigger_definition_error(
+          MismatchingOrganizerError.new(interactor, organizing, organized)
+        )
       end
 
       delegate :organized, to: :interactor
