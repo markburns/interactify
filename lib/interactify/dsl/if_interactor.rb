@@ -6,18 +6,19 @@ require "interactify/dsl/if_klass"
 module Interactify
   module Dsl
     class IfInteractor
-      attr_reader :condition, :evaluating_receiver
+      attr_reader :condition, :evaluating_receiver, :caller_info
 
-      def self.attach_klass(evaluating_receiver, condition, succcess_interactor, failure_interactor)
-        ifable = new(evaluating_receiver, condition, succcess_interactor, failure_interactor)
+      def self.attach_klass(evaluating_receiver, condition, succcess_interactor, failure_interactor, caller_info:)
+        ifable = new(evaluating_receiver, condition, succcess_interactor, failure_interactor, caller_info:)
         ifable.attach_klass
       end
 
-      def initialize(evaluating_receiver, condition, succcess_arg, failure_arg)
+      def initialize(evaluating_receiver, condition, succcess_arg, failure_arg, caller_info:)
         @evaluating_receiver = evaluating_receiver
         @condition = condition
         @success_arg = succcess_arg
         @failure_arg = failure_arg
+        @caller_info = caller_info
       end
 
       def success_interactor
@@ -71,7 +72,7 @@ module Interactify
         case arg
         when Array
           name = "If#{condition.to_s.camelize}#{truthiness ? 'IsTruthy' : 'IsFalsey'}"
-          klass_basis.chain(name, *arg)
+          klass_basis.chain(name, *arg, caller_info:)
         else
           arg
         end

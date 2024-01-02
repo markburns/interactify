@@ -30,6 +30,12 @@ module Interactify
           wrap_chain
         when Proc
           wrap_proc
+        when Class
+          return interactor if interactor < Interactor
+
+          raise ArgumentError, "#{interactor} must respond_to .call" unless interactor.respond_to?(:call)
+
+          wrap_proc
         else
           interactor
         end

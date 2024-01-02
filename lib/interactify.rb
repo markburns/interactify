@@ -10,38 +10,43 @@ require "interactify/contracts/promising"
 require "interactify/dsl"
 require "interactify/wiring"
 require "interactify/configuration"
+require "interactify/interactify_callable"
 
 module Interactify
-  def self.railties_missing?
-    @railties_missing
-  end
+  class << self
+    delegate :on_definition_error, :trigger_definition_error, to: :configuration
 
-  def self.railties_missing!
-    @railties_missing = true
-  end
+    def railties_missing?
+      @railties_missing
+    end
 
-  def self.railties
-    railties?
-  end
+    def railties_missing!
+      @railties_missing = true
+    end
 
-  def self.railties?
-    !railties_missing?
-  end
+    def railties
+      railties?
+    end
 
-  def self.sidekiq_missing?
-    @sidekiq_missing
-  end
+    def railties?
+      !railties_missing?
+    end
 
-  def self.sidekiq_missing!
-    @sidekiq_missing = true
-  end
+    def sidekiq_missing?
+      @sidekiq_missing
+    end
 
-  def self.sidekiq
-    sidekiq?
-  end
+    def sidekiq_missing!
+      @sidekiq_missing = true
+    end
 
-  def self.sidekiq?
-    !sidekiq_missing?
+    def sidekiq
+      sidekiq?
+    end
+
+    def sidekiq?
+      !sidekiq_missing?
+    end
   end
 end
 

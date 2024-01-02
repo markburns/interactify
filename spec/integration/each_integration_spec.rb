@@ -8,16 +8,16 @@ RSpec.describe "Interactify.each" do
     end
   end
 
-  let(:thing_1) do
+  let(:thing1) do
     OpenStruct.new
   end
 
-  let(:thing_2) do
+  let(:thing2) do
     OpenStruct.new
   end
 
   it "runs the outer interactors" do
-    result = Each::Organizer.call!(things: [thing_1, thing_2])
+    result = Each::Organizer.call!(things: [thing1, thing2])
 
     expect(result.a).to eq("a")
     expect(result.b).to eq("b")

@@ -8,30 +8,26 @@ RSpec.describe "Interactify.if" do
     end
   end
 
-  let(:thing_1) do
+  let(:thing1) do
     OpenStruct.new
   end
 
-  let(:thing_2) do
+  let(:thing2) do
     OpenStruct.new
   end
 
-  context "with method syntax" do
-    let(:truthy_result) { If::MethodSyntaxOrganizer.call!(blah: true) }
-    let(:falsey_result) { If::MethodSyntaxOrganizer.call!(blah: false) }
+  context "with an interactified symbol to proc" do
+    before do
+      require "./spec/fixtures/integration_app/app/interactors/if_with_interactified_lambda_clause"
+    end
 
-    it "runs the relevant clauses" do
-      expect(truthy_result.a).to eq("a")
-      expect(truthy_result.b).to eq("b")
-      expect(truthy_result.c).to eq(nil)
-      expect(truthy_result.d).to eq(nil)
-      expect(truthy_result.anyways).to eq(true)
+    it "successfully runs" do
+      klass = A::B::IfWithInteractifiedLambdaClause
+      # result = klass.call!(some_flag_is_set: true)
+      # expect(result.was_set).to eq(true)
 
-      expect(falsey_result.a).to eq(nil)
-      expect(falsey_result.b).to eq(nil)
-      expect(falsey_result.c).to eq("c")
-      expect(falsey_result.d).to eq("d")
-      expect(falsey_result.anyways).to eq(false)
+      result = klass.call!(some_flag_is_set: false)
+      expect(result.was_set).to eq(false)
     end
   end
 

@@ -25,20 +25,30 @@ gem 'interactify'
 ```ruby
 # in config/initializers/interactify.rb
 Interactify.configure do |config|
-  # default
-  # config.root = Rails.root / 'app'
-end
+  # defaults
+  config.root = Rails.root / 'app'
 
-Interactify.on_contract_breach do |context, attrs|
-  # maybe add context to Sentry or Honeybadger etc here
-end
+  config.on_contract_breach do |context, contract_failures|
+    # maybe add context to Sentry or Honeybadger etc here
+  end
 
-Interactify.before_raise do |exception|
-  # maybe add context to Sentry or Honeybadger etc here
+  # called when an Interactify.organizing or Interactify.promising fails to match the actual interactor
+  # definitions
+  config.on_definition_error = Kernel.method(:raise)
+
+  # config.on_definition_error do |error|
+  #   # you may want to raise an error in test but not in production
+  #   # or you may want to log the error
+  # end
+
+  config.before_raise do |exception|
+    # maybe add context to Sentry or Honeybadger etc here
+  end
 end
 ```
 
 ### Using the RSpec matchers
+
 ```ruby
 # e.g. in spec/support/interactify.rb
 require 'interactify/rspec_matchers/matchers'
@@ -107,6 +117,24 @@ organize \
   Thing1, 
   ->(c){ byebug if c.order.nil? },
   Thing2
+```
+
+Sometimes you also want a one liner but testability too.
+the `Interactify` method will take a block or a lambda and return an Interactify class.
+
+```ruby
+# passing a block
+DecorateOrder = Interactify do |context| 
+  context.order = context.order.decorate
+end
+
+# passing a lambda
+DecorateOrder = Interactify(some_lambda)
+
+# passing anything that responds to call
+# please note if you pass a class it will be instantiated first
+# so you can't pass a class with a constructor that takes arguments
+DecorateOrder = Interactify(callable_object)
 ```
 
 ### Each/Iteration
@@ -307,6 +335,54 @@ step_1
 Actual promises are:
 step1
 ```
+
+### Organizing
+You can now annotate your interactors in the organize arguments with their sub-organizers' interactors. 
+This also serves as executable documentation, validated at load time, and is enforced to stay in sync.
+
+
+```ruby
+organize \
+  LoadOrder,
+  MarkAsPaid,
+  SendOutNotifications.organizing(
+    EmailUser,
+    SendPush,
+    NotifySomeThirdParty, 
+    SendOutNotifications::DoAnotherThing
+  )
+
+class SendOutNotifications
+  organize \
+    EmailUser,
+    SendPush,
+    NotifySomeThirdParty,
+    SetData = Interactify do |context|
+      context.data = {this: true}
+    end
+end
+```
+
+In this example, it might seem reasonable for an editor of SendOutNotifications to append SetData to the end of the chain. 
+However, the naming here is not ideal. 
+If it's generically named and not easily searchable, then the discoverability of the code is reduced.
+
+By invoking `.organizing` when the original author first uses `SendOutNotifications`, it encourages the subsequent editor to think about and document its own callers. 
+They may still choose to add `SetData` to the end of the chain, but this increases the chances of more easily finding where the data is changed.
+
+
+Example load time failure:
+```
+SendOutNotifications does not organize:
+[EmailUser, SendPush, NotifySomeThirdParty]
+
+Actual organized classes are:
+[EmailUser, SendPush, NotifySomeThirdParty, SendOutNotifications::SetData]
+
+Expected organized classes are:
+[SendOutNotifications::SetData]
+```
+
 
 ### Interactor wiring specs
 Sometimes you have an interactor chain that fails because something is expected deeper down the chain and not provided further up the chain. 
