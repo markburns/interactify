@@ -16,6 +16,10 @@ RSpec.describe "Interactify.organizing" do
   end
 
   context "with invalid fixtures" do
+    before do
+      Interactify.on_definition_error(&Kernel.method(:raise))
+    end
+
     it "spots extra interactors" do
       expect { load_interactify_fixtures("invalid_organizing/extra") }
         .to raise_error do |err|

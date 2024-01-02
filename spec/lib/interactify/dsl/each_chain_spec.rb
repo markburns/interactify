@@ -2,9 +2,12 @@
 
 RSpec.describe Interactify::Dsl::EachChain do
   describe ".attach_klass" do
-    it "attaches a new class to the passed in context" do
-      chain = Interactify::Dsl::EachChain.attach_klass(SpecSupport, :things, [k(:A), k(:B)])
+    let(:chain) do
+      Interactify::Dsl::EachChain.attach_klass(SpecSupport, [k(:A), k(:B)], plural_resource_name: :things, caller_info:)
+    end
+    let(:caller_info) { "/some/path/to/file.rb:123" }
 
+    it "attaches a new class to the passed in context" do
       expect(chain.name).to match(/SpecSupport::EachThing\d+/)
 
       result = chain.call!(things: [1, 2, 3])
@@ -15,8 +18,6 @@ RSpec.describe Interactify::Dsl::EachChain do
 
     context "when expected key is missing in context" do
       it "raises an error" do
-        chain = Interactify::Dsl::EachChain.attach_klass(SpecSupport, :things, [k(:A), k(:B)])
-
         expect { chain.call!(other_things: [1, 2, 3]) }
           .to raise_error do |error|
           expect(error).to be_a described_class::MissingIteratableValueInContext

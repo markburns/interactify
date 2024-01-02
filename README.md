@@ -25,20 +25,30 @@ gem 'interactify'
 ```ruby
 # in config/initializers/interactify.rb
 Interactify.configure do |config|
-  # default
-  # config.root = Rails.root / 'app'
-end
+  # defaults
+  config.root = Rails.root / 'app'
 
-Interactify.on_contract_breach do |context, attrs|
-  # maybe add context to Sentry or Honeybadger etc here
-end
+  config.on_contract_breach do |context, contract_failures|
+    # maybe add context to Sentry or Honeybadger etc here
+  end
 
-Interactify.before_raise do |exception|
-  # maybe add context to Sentry or Honeybadger etc here
+  # called when an Interactify.organizing or Interactify.promising fails to match the actual interactor
+  # definitions
+  config.on_definition_error = Kernel.method(:raise)
+
+  # config.on_definition_error do |error|
+  #   # you may want to raise an error in test but not in production
+  #   # or you may want to log the error
+  # end
+
+  config.before_raise do |exception|
+    # maybe add context to Sentry or Honeybadger etc here
+  end
 end
 ```
 
 ### Using the RSpec matchers
+
 ```ruby
 # e.g. in spec/support/interactify.rb
 require 'interactify/rspec_matchers/matchers'

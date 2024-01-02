@@ -20,7 +20,8 @@ RSpec.describe Interactify::Dsl do
           slot,
           :condition,
           :success,
-          :failure
+          :failure,
+          caller_info: an_instance_of(String)
         )
       end
 
@@ -73,6 +74,18 @@ RSpec.describe Interactify::Dsl do
           result = klass.call!(condition: false)
           expect(result.success1).to eq(false)
           expect(result.success2).to eq(false)
+        end
+
+        context "when unexpected keys" do
+          it "raises an error" do
+            expect do
+              slot.if(
+                :condition,
+                when: [on_success1, on_success2],
+                else: [on_failure1, on_failure2]
+              )
+            end.to raise_error(described_class::IfDefinitionUnexpectedKey, "Unexpected keys: when")
+          end
         end
       end
     end
