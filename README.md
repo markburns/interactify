@@ -1,7 +1,6 @@
 # Interactify
 
 [![Gem Version](https://badge.fury.io/rb/interactify.svg?1704215019)](https://badge.fury.io/rb/interactify)
-
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 ![Ruby 3.3.0](https://img.shields.io/badge/ruby-3.3.0-green.svg)
 ![Ruby 3.2.2](https://img.shields.io/badge/ruby-3.2.2-green.svg)
