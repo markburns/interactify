@@ -6,6 +6,7 @@ require "interactify/contracts/failure"
 require "interactify/contracts/setup"
 require "interactify/contracts/promising"
 require "interactify/contracts/organizing"
+require "interactify/contracts/breaches"
 require "interactify/dsl/organizer"
 
 module Interactify
@@ -60,27 +61,18 @@ module Interactify
       # rubocop: enable Metrics/BlockLength
 
       included do
-        c = Class.new(Contracts::Failure)
+        failure_klass = Class.new(Contracts::Failure)
         # example self is Whatever::SomeInteractor
         # failure class:  Whatever::SomeInteractor::InteractorContractFailure
-        const_set "InteractorContractFailure", c
+        const_set "InteractorContractFailure", failure_klass
         prepend Contracts::CallWrapper
         include Dsl::Organizer
 
         on_breach do |breaches|
-          breaches = breaches.map { |b| { b.property => b.messages } }.inject(&:merge)
-
-          Interactify.trigger_contract_breach_hook(context, breaches)
-
           if @_interactor_called_by_non_bang_method == true
-            context.fail! contract_failures: breaches
+            Breaches.handle_with_failure(context, breaches)
           else
-            # e.g. raises
-            # SomeNamespace::SomeClass::ContractFailure, {whatever: 'is missing'}
-            # but also sending the context into Sentry
-            exception = c.new(breaches.to_json)
-            Interactify.trigger_before_raise_hook(exception)
-            raise exception
+            Breaches.handle_with_exception(context, failure_klass, breaches)
           end
         end
       end
