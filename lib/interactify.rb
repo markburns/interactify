@@ -11,100 +11,16 @@ require "interactify/dsl"
 require "interactify/wiring"
 require "interactify/configuration"
 require "interactify/interactify_callable"
-
-module Interactify
-  class << self
-    delegate :on_definition_error, :trigger_definition_error, to: :configuration
-
-    def railties_missing?
-      @railties_missing
-    end
-
-    def railties_missing!
-      @railties_missing = true
-    end
-
-    def railties
-      railties?
-    end
-
-    def railties?
-      !railties_missing?
-    end
-
-    def sidekiq_missing?
-      @sidekiq_missing
-    end
-
-    def sidekiq_missing!
-      @sidekiq_missing = true
-    end
-
-    def sidekiq
-      sidekiq?
-    end
-
-    def sidekiq?
-      !sidekiq_missing?
-    end
-  end
-end
-
-Interactify.instance_eval do
-  @sidekiq_missing = nil
-  @railties_missing = nil
-end
-
-begin
-  require "sidekiq"
-rescue LoadError
-  Interactify.sidekiq_missing!
-end
-
-begin
-  require "rails/railtie"
-rescue LoadError
-  Interactify.railties_missing!
-end
+require "interactify/dependency_inference"
+require "interactify/hooks"
+require "interactify/configure"
 
 module Interactify
   extend ActiveSupport::Concern
+  extend Hooks
+  extend Configure
 
   class << self
-    def validate_app(ignore: [])
-      Interactify::Wiring.new(root: Interactify.configuration.root, ignore:).validate_app
-    end
-
-    def reset
-      @on_contract_breach = nil
-      @before_raise_hook = nil
-      @configuration = nil
-    end
-
-    def trigger_contract_breach_hook(...)
-      @on_contract_breach&.call(...)
-    end
-
-    def on_contract_breach(&block)
-      @on_contract_breach = block
-    end
-
-    def trigger_before_raise_hook(...)
-      @before_raise_hook&.call(...)
-    end
-
-    def before_raise(&block)
-      @before_raise_hook = block
-    end
-
-    def configure
-      yield configuration
-    end
-
-    def configuration
-      @configuration ||= Configuration.new
-    end
-
     delegate :root, to: :configuration
   end
 

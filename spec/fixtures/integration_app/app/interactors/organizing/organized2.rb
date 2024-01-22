@@ -6,13 +6,13 @@ module Organizing
     include Interactify
 
     organize(
-        DeeplyNestedInteractor,
-        DeeplyNestedPromisingInteractor.promising(
-          :deeply_nested_promising_interactor_called
-        ),
-        Organized2Called = Interactify do |context|
-          context.organized2_called = true
-        end
-      )
+      DeeplyNestedInteractor,
+      DeeplyNestedPromisingInteractor.promising(
+        :deeply_nested_promising_interactor_called
+      ),
+      Organized2Called = Interactify do |context|
+        context.organized2_called = true
+      end
+    )
   end
 end

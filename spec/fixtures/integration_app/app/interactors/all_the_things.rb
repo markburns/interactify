@@ -31,7 +31,10 @@
 # Note: The conditional structures (`if`, `each`) here are not executed at runtime in the usual
 # sense. They are evaluated when defining the organizer, leading to the creation of discrete
 # classes that handle the respective logic.
-#
+
+require_relative './organizing/organized1'
+require_relative './organizing/organized2'
+
 class AllTheThings
   include Interactify
 
@@ -44,6 +47,21 @@ class AllTheThings
       :things, 
       then: [If::A, If::B], 
       else: [If::C, If::D]
+    ),
+
+    # test nested promises
+    chain(
+      :nested_promises, 
+      Organizing::Organized1.promising(
+        :organized1_called
+      ), 
+      Organizing::Organized2.organizing(
+        Organizing::DeeplyNestedInteractor,
+        Organizing::DeeplyNestedPromisingInteractor.promising(
+          :deeply_nested_promising_interactor_called
+        ),
+        Organizing::Organized2::Organized2Called
+      )
     ),
 
     # test each with lambda
