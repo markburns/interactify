@@ -34,6 +34,11 @@
 
 require_relative './organizing/organized1'
 require_relative './organizing/organized2'
+require_relative './if/a'
+require_relative './if/b'
+require_relative './if/c'
+require_relative './if/d'
+require_relative './if/organizer'
 
 class AllTheThings
   include Interactify
