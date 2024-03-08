@@ -34,7 +34,7 @@ module If
       expect :blah, filled: false
 
       organize(
-        {if: :blah, then: [A, B], else: [C, D]},
+        { if: :blah, then: [A, B], else: [C, D] },
         Anyways
       )
     end

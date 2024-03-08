@@ -22,7 +22,7 @@
 # when the code is in one place.
 #
 # Typically this will allow us to move closer towards a one organizer per interaction model.
-# E.g. one Rails action == one organizer. 
+# E.g. one Rails action == one organizer.
 # Even the background job firing can be handled by the organizer via YourClass::Async.
 #
 # An improvement we aim for is automatic diagram generation from the organizers, utilizing
@@ -32,13 +32,13 @@
 # sense. They are evaluated when defining the organizer, leading to the creation of discrete
 # classes that handle the respective logic.
 
-require_relative './organizing/organized1'
-require_relative './organizing/organized2'
-require_relative './if/a'
-require_relative './if/b'
-require_relative './if/c'
-require_relative './if/d'
-require_relative './if/organizer'
+require_relative "./organizing/organized1"
+require_relative "./organizing/organized2"
+require_relative "./if/a"
+require_relative "./if/b"
+require_relative "./if/c"
+require_relative "./if/d"
+require_relative "./if/organizer"
 
 class AllTheThings
   include Interactify
@@ -49,17 +49,16 @@ class AllTheThings
 
   organize \
     self.if(
-      :things, 
-      then: [If::A, If::B], 
+      :things,
+      then: [If::A, If::B],
       else: [If::C, If::D]
     ),
-
     # test nested promises
     chain(
-      :nested_promises, 
+      :nested_promises,
       Organizing::Organized1.promising(
         :organized1_called
-      ), 
+      ),
       Organizing::Organized2.organizing(
         Organizing::DeeplyNestedInteractor,
         Organizing::DeeplyNestedPromisingInteractor.promising(
@@ -68,90 +67,77 @@ class AllTheThings
         Organizing::Organized2::Organized2Called
       )
     ),
-
     # test each with lambda
     self.if(
-      -> (c) { c.things },
-      self.each(
-        :things, 
-        If::A, 
-        If::B, 
-        -> (c) { c.lambda_set = true }
-      ),
+      ->(c) { c.things },
+      each(
+        :things,
+        If::A,
+        If::B,
+        ->(c) { c.lambda_set = true }
+      )
     ),
-
     # test alternative if syntax
     self.if(
-      -> (c) { c.a && c.b } ,
-      then: -> (c) { c.both_a_and_b = true },
-      else: -> (c) { c.both_a_and_b = false}
+      ->(c) { c.a && c.b },
+      then: ->(c) { c.both_a_and_b = true },
+      else: ->(c) { c.both_a_and_b = false }
     ),
-
     # test setting a value to use later in the chain
-    -> (c) { c.more_things = [1, 2, 3, 4] },
-
+    ->(c) { c.more_things = [1, 2, 3, 4] },
     # test lambdas inside each
-    self.each(
-      :more_things, 
-      -> (c) {
-        if c.more_thing_index.zero? 
-          c.first_more_thing = true
-        end
+    each(
+      :more_things,
+      lambda { |c|
+        c.first_more_thing = true if c.more_thing_index.zero?
       },
-      -> (c) {
-        if c.more_thing_index == 1
-          c.next_more_thing = true 
-        end
+      lambda { |c|
+        c.next_more_thing = true if c.more_thing_index == 1
       },
       # test nested if inside each
-      {if: :not_set_thing, then: -> (c) { c.not_set_thing = true } },
-
+      { if: :not_set_thing, then: ->(c) { c.not_set_thing = true } },
       # test setting a value after an else
-      -> (c) { c.more_thing = true }
+      ->(c) { c.more_thing = true }
     ),
-
     self.if(
-      :optional_thing, 
+      :optional_thing,
       then: [
-        -> (c) { c.optional_thing_was_set = true },
-        -> (c) { c.and_then_another_thing = true },
-        -> (c) { c.and_one_more_thing = true },
+        ->(c) { c.optional_thing_was_set = true },
+        ->(c) { c.and_then_another_thing = true },
+        ->(c) { c.and_one_more_thing = true },
         # test nested each inside if
-        self.each(:more_things, 
-                  -> (c) { c.more_things[c.more_thing_index] = c.more_thing + 5 },
-                  -> (c) { c.more_things[c.more_thing_index] = c.more_thing + 5 }
-                 )
+        each(:more_things,
+             ->(c) { c.more_things[c.more_thing_index] = c.more_thing + 5 },
+             ->(c) { c.more_things[c.more_thing_index] = c.more_thing + 5 })
       ],
-      else: -> (c) { c.optional_thing_was_set = false }
+      else: ->(c) { c.optional_thing_was_set = false }
     ),
-
     # if -> each -> if -> each
     self.if(:condition, then: [-> {}], else: [
-      self.each(
-        :things,
-        self.if(
-          :thing, 
-          then: self.each(
-            :more_things,
-            -> (c) { 
-              c.counter ||= 0
-              c.counter += 1
-            }
-          )
-        )
-      )
-    ]),
-
+              each(
+                :things,
+                self.if(
+                  :thing,
+                  then: each(
+                    :more_things,
+                    lambda { |c|
+                      c.counter ||= 0
+                      c.counter += 1
+                    }
+                  )
+                )
+              )
+            ]),
     # each -> each -> each
-    self.each(
+    each(
       :more_things,
-      self.each(
+      each(
         :more_things,
-        self.each(
+        each(
           :more_things,
-          self.each(
+          each(
             :more_things,
-            -> (c) { 
+            lambda { |c|
               c.heavily_nested_counter ||= 0
               c.heavily_nested_counter += 1
             }

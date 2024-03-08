@@ -52,5 +52,3 @@ begin
 rescue LoadError
   Interactify.railties_missing!
 end
-
-

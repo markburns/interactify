@@ -61,24 +61,24 @@ RSpec.describe Interactify::Wiring do
     ]
   end
 
-  describe '#validate_app' do
-    context 'with a valid app' do
+  describe "#validate_app" do
+    context "with a valid app" do
       let(:root) do
         Pathname.new("./spec/fixtures/dummy_app/app/")
       end
 
-      it 'validates the app' do
-        expect(subject.validate_app).to eq ''
+      it "validates the app" do
+        expect(subject.validate_app).to eq ""
       end
     end
 
-    context 'with an invalid app' do
+    context "with an invalid app" do
       let(:root) do
         Pathname.new("./spec/fixtures/integration_app/app/")
       end
 
-      it 'returns the errors' do
-        expect(subject.validate_app).to eq ''
+      it "returns the errors" do
+        expect(subject.validate_app).to eq ""
       end
     end
   end
