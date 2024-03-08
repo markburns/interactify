@@ -46,7 +46,5 @@ jobs:
       with:
         files: ./coverage/${{ matrix.ruby }}-${{ matrix.appraisal }}/coverage.json
         token: ${{ secrets.CODECOV_TOKEN }}
-
     - name: List coverage directory
       run: ls -R ./coverage
-

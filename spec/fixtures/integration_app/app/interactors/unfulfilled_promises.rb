@@ -1,5 +1,5 @@
-require_relative './organizing/organized1'
-require_relative './organizing/organized2'
+require_relative "./organizing/organized1"
+require_relative "./organizing/organized2"
 
 class UnfulfilledPromises
   include Interactify
@@ -10,18 +10,17 @@ class UnfulfilledPromises
   promise :another_thing
 
   organize each(
-    :things, 
+    :things,
     {
-      if: :dont_fulfill, 
+      if: :dont_fulfill,
       then: chain(
-        :nested_promises, 
+        :nested_promises,
         each(
-          :things, 
+          :things,
           Organizing::Organized1.promising(
             :organized1_called
-          ), 
+          ),
           SetAnothingThing = Interactify { _1.another_thing = true },
-
           Organizing::Organized2.organizing(
             Organizing::DeeplyNestedInteractor,
             Organizing::DeeplyNestedPromisingInteractor.promising(

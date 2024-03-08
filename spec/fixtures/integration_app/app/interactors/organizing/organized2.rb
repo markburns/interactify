@@ -1,5 +1,5 @@
-require_relative 'deeply_nested_interactor'
-require_relative 'deeply_nested_promising_interactor'
+require_relative "deeply_nested_interactor"
+require_relative "deeply_nested_promising_interactor"
 
 module Organizing
   class Organized2

@@ -18,7 +18,7 @@ RSpec.describe "Interactify.if" do
 
   context "with an interactified symbol to proc" do
     before do
-      require "./spec/fixtures/integration_app/app/interactors/if_with_interactified_lambda_clause"
+      require "./spec/fixtures/integration_app/app/interactors/a/b/if_with_interactified_lambda_clause"
     end
 
     it "successfully runs" do
@@ -32,8 +32,8 @@ RSpec.describe "Interactify.if" do
   end
 
   context "with alternative method syntax" do
-    let(:truthy_result) { If::AlternativeMethodSyntaxOrganizer.call!(blah: true) }
-    let(:falsey_result) { If::AlternativeMethodSyntaxOrganizer.call!(blah: false) }
+    let(:truthy_result) { If::Organizer::AlternativeMethodSyntaxOrganizer.call!(blah: true) }
+    let(:falsey_result) { If::Organizer::AlternativeMethodSyntaxOrganizer.call!(blah: false) }
 
     it "runs the relevant clauses" do
       expect(truthy_result.a).to eq("a")
@@ -51,8 +51,8 @@ RSpec.describe "Interactify.if" do
   end
 
   context "with hash syntax" do
-    let(:truthy_result) { If::HashSyntaxOrganizer.call!(blah: true) }
-    let(:falsey_result) { If::HashSyntaxOrganizer.call!(blah: false) }
+    let(:truthy_result) { If::Organizer::HashSyntaxOrganizer.call!(blah: true) }
+    let(:falsey_result) { If::Organizer::HashSyntaxOrganizer.call!(blah: false) }
 
     it "runs the relevant clauses" do
       expect(truthy_result.a).to eq("a")
