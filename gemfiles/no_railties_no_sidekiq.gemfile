@@ -13,6 +13,7 @@ group :test do
   gem "debug"
   gem "rspec", "~> 3.0"
   gem "simplecov", require: false
+  gem "simplecov-json", require: false
 end
 
 gemspec path: "../"
