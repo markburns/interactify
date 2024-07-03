@@ -18,7 +18,7 @@ RSpec.describe Interactify::Async::JobMaker do
     )
   end
 
-  if Interactify.sidekiq
+  if Interactify.sidekiq?
     describe "#initialize" do
       it "initializes with expected attributes" do
         expect(subject.container_klass).to eq(container_klass)
