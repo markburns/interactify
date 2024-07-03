@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Interactify
   module Breaches
     def self.handle_with_failure(context, breaches)

@@ -31,7 +31,7 @@ RSpec.describe Interactify::Async::JobMaker do
 
   describe "concerning JobClass" do
     describe "#job_klass" do
-      if Interactify.sidekiq
+      if Interactify.sidekiq?
         it "returns a job class" do
           job_klass = subject.job_klass
 
@@ -43,16 +43,16 @@ RSpec.describe Interactify::Async::JobMaker do
           expect(job_klass.included_modules).to include(Sidekiq::Job)
         end
       else
-        it "returns a null job_klass" do
+        it "returns nil" do
           job_klass = subject.job_klass
 
-          expect(job_klass).to eq(Interactify::Async::NullJob)
+          expect(job_klass).to eq(nil)
         end
       end
     end
   end
 
-  if Interactify.sidekiq
+  if Interactify.sidekiq?
     describe "concerning JobClass" do
       describe "#job_klass" do
         it "job class includes JOBABLE_OPTS constant" do

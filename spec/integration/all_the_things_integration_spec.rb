@@ -16,7 +16,9 @@ RSpec.describe "Interactify" do
   before do
     load_interactify_fixtures("each")
     load_interactify_fixtures("if/")
-    load "./spec/fixtures/integration_app/app/interactors/all_the_things.rb"
+    silence_warnings do
+      load "./spec/fixtures/integration_app/app/interactors/all_the_things.rb"
+    end
   end
 
   context "without an optional thing" do

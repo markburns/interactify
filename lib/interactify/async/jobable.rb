@@ -15,6 +15,8 @@ module Interactify
         next if Interactify.sidekiq_missing?
 
         def base.inherited(klass)
+          return if Interactify.sidekiq_missing?
+
           super_klass = klass.superclass
           super_job = super_klass::Job # really spiffing
 

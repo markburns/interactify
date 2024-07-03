@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Interactify
   class << self
     delegate :on_definition_error, :trigger_definition_error, to: :configuration
@@ -10,10 +12,6 @@ module Interactify
       @railties_missing = true
     end
 
-    def railties
-      railties?
-    end
-
     def railties?
       !railties_missing?
     end
@@ -24,10 +22,6 @@ module Interactify
 
     def sidekiq_missing!
       @sidekiq_missing = true
-    end
-
-    def sidekiq
-      sidekiq?
     end
 
     def sidekiq?
