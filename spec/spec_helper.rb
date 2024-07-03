@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 require "debug"
+
 require "./spec/support/coverage"
+
 require "interactify"
 
 if Interactify.sidekiq?
