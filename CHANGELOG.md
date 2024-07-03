@@ -1,4 +1,5 @@
 ## [Unreleased]
+- Add support for `Interactify.with(queue: 'within_30_seconds', retry: 3)`
 
 ## [0.5.0] - 2024-01-01
 - Add support for `SetA = Interactify { _1.a = 'a' }`, lambda and block class creation syntax
