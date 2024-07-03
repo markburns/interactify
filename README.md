@@ -108,6 +108,26 @@ class LoadOrder
 end
 ```
 
+#### filled: false
+Both expect and promise can take the optional parameter `filled: false`
+This means that whilst the key is expected to be passed, it doesn't have to have a truthy or present value.
+Use this where valid values include, `[]`, `""`, `nil` or `false` etc.
+
+
+#### optional
+
+```ruby
+class LoadOrder
+  include Interactify
+
+  optional :some_key, :another_key
+end
+```
+
+Optional can be used to denote that the key is not required to be passed.
+This is effectively equivalent to `delegate :key, to: :context`, but does not require the key to be present in the context.
+This is not recommended as the keys will not be validated by the contract or the interactor wiring specs.
+
 
 ### Lambdas
 
@@ -466,6 +486,39 @@ By using it's internal Async class.
 
 > [!CAUTION]
 > As your class is now executing asynchronously you can no longer rely on its promises later on in the chain.
+
+
+### Sidekiq options
+```ruby
+class SomeInteractor
+  include Interactify.with(queue: 'within_30_seconds')
+end
+```
+
+This allows you to set the sidekiq options for the asyncified interactor.
+It will autogenerate a class name that has the options set.
+
+`SomeInteractor::Job__Queue_Within30Seconds` or with a random number suffix
+if there is a naming clash.
+
+`SomeInteractor::Job__Queue_Within30Seconds_5342`
+
+This is also aliased as `SomeInteractor::Job` for convenience.
+
+An almost equivalent to the above without the `.with` method is:
+
+```ruby
+class SomeInteractor
+  include Interactify
+
+  class JobWithin30Seconds < Job
+    sidekiq_options queue: 'within_30_seconds'
+  end
+end
+```
+
+Here the JobWithin30Seconds class is manually set up and subclasses the one
+automatically created by `include Interactify`.
 
 ## FAQs
 - This is ugly isn't it?

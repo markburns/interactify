@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 module SpecSupport
-  include Interactify
+  module EachInteractor
+    include Interactify
+  end
 
   module LoadInteractifyFixtures
     def load_interactify_fixtures(sub_directory)

@@ -3,19 +3,35 @@
 module Interactify
   module Dsl
     module UniqueKlassName
-      def self.for(namespace, prefix)
-        id = generate_unique_id
-        klass_name = :"#{prefix.to_s.camelize.gsub("::", "__")}#{id}"
+      module_function
 
-        while namespace.const_defined?(klass_name)
-          id = generate_unique_id
-          klass_name = :"#{prefix}#{id}"
+      def for(namespace, prefix, camelize: true)
+        prefix = normalize_prefix(prefix:, camelize:)
+        klass_name = name_with_suffix(namespace, prefix, nil)
+
+        loop do
+          return klass_name.to_sym if klass_name
+
+          klass_name = name_with_suffix(namespace, prefix, generate_unique_id)
         end
-
-        klass_name.to_sym
       end
 
-      def self.generate_unique_id
+      def name_with_suffix(namespace, prefix, suffix)
+        name = [prefix, suffix].compact.join("_")
+
+        return nil if namespace.const_defined?(name.to_sym)
+
+        name
+      end
+
+      def normalize_prefix(prefix:, camelize:)
+        normalized = prefix.to_s.gsub(/::/, "__")
+        return normalized unless camelize
+
+        normalized.camelize
+      end
+
+      def generate_unique_id
         rand(10_000)
       end
     end

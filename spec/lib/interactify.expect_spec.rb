@@ -2,7 +2,7 @@
 
 RSpec.describe Interactify do
   describe ".expect" do
-    class DummyInteractorClass
+    self::DummyInteractorClass = Class.new do
       include Interactify
       expect :thing
       expect :this, filled: false
@@ -18,10 +18,12 @@ RSpec.describe Interactify do
     end
     NOISY_CONTEXT = noisy_context
 
-    class AnotherDummyInteractorOrganizerClass
+    this = self
+
+    self::AnotherDummyInteractorOrganizerClass = Class.new do
       include Interactify
 
-      organize DummyInteractorClass
+      organize this::DummyInteractorClass
 
       def call
         NOISY_CONTEXT.each do |k, v|
@@ -45,7 +47,7 @@ RSpec.describe Interactify do
       end
 
       context "when using call" do
-        let(:result) { AnotherDummyInteractorOrganizerClass.call }
+        let(:result) { this::AnotherDummyInteractorOrganizerClass.call }
 
         it "does not raise" do
           expect { result }.not_to raise_error
@@ -69,8 +71,8 @@ RSpec.describe Interactify do
       end
 
       it "raises a useful error", :aggregate_failures do
-        expect { AnotherDummyInteractorOrganizerClass.call! }.to raise_error do |e|
-          expect(e.class).to eq DummyInteractorClass::InteractorContractFailure
+        expect { this::AnotherDummyInteractorOrganizerClass.call! }.to raise_error do |e|
+          expect(e.class).to eq this::DummyInteractorClass::InteractorContractFailure
 
           outputted_failures = JSON.parse(e.message)
 
@@ -79,7 +81,7 @@ RSpec.describe Interactify do
 
         expect(@some_context).to eq NOISY_CONTEXT.symbolize_keys
         expect(@contract_failures).to eq contract_failures.symbolize_keys
-        expect(@logged_exception).to be_a DummyInteractorClass::InteractorContractFailure
+        expect(@logged_exception).to be_a this::DummyInteractorClass::InteractorContractFailure
       end
     end
   end
