@@ -8,7 +8,7 @@ RSpec.describe Interactify::Dsl::EachChain do
     let(:caller_info) { "/some/path/to/file.rb:123" }
 
     it "attaches a new class to the passed in context" do
-      expect(chain.name).to match(/SpecSupport::EachThing\d+/)
+      expect(chain.name).to match(/SpecSupport::EachThing(_\d+)?/)
 
       result = chain.call!(things: [1, 2, 3])
       expect(result.things).to eq([1, 2, 3])

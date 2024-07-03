@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require "interactify/async/job_klass"
-require "interactify/async/null_job"
 
 module Interactify
   module Async
     class JobMaker
+      VALID_KEYS = %i[queue retry dead backtrace pool tags].freeze
       attr_reader :opts, :method_name, :container_klass, :klass_suffix
 
       def initialize(container_klass:, opts:, klass_suffix:, method_name: :call!)
@@ -23,11 +23,11 @@ module Interactify
         private
 
         def define_job_klass
-          return NullJob if Interactify.sidekiq_missing?
+          return if Interactify.sidekiq_missing?
 
           this = self
 
-          invalid_keys = this.opts.symbolize_keys.keys - %i[queue retry dead backtrace pool tags]
+          invalid_keys = this.opts.symbolize_keys.keys - VALID_KEYS
 
           raise ArgumentError, "Invalid keys: #{invalid_keys}" if invalid_keys.any?
 
@@ -44,7 +44,9 @@ module Interactify
             sidekiq_options(opts)
 
             def perform(...)
-              self.class.module_parent.send(self.class::JOBABLE_METHOD_NAME, ...)
+              self.class.module_parent.send(
+                self.class::JOBABLE_METHOD_NAME, ...
+              )
             end
           end
         end

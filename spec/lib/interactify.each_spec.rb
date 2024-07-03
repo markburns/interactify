@@ -36,15 +36,15 @@ RSpec.describe Interactify do
     end
 
     it "creates an interactor class that iterates over the given collection" do
-      allow(SpecSupport).to receive(:const_set).and_wrap_original do |meth, name, klass|
-        expect(name).to match(/EachThing\d+\z/)
+      allow(SpecSupport::EachInteractor).to receive(:const_set).and_wrap_original do |meth, name, klass|
+        expect(name).to match(/EachThing(_\d+)?\z/)
         expect(klass).to be_a(Class)
         expect(klass.ancestors).to include(Interactor)
         meth.call(name, klass)
       end
 
-      klass = SpecSupport.each(:things, k(:A), k(:B), k(:C))
-      expect(klass.name).to match(/SpecSupport::EachThing\d+\z/)
+      klass = SpecSupport::EachInteractor.each(:things, k(:A), k(:B), k(:C))
+      expect(klass.name).to match(/SpecSupport::EachInteractor::EachThing(_\d+)?\z/)
 
       file, line = klass.source_location
       expect(file).to match __FILE__

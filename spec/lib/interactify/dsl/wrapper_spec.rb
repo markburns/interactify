@@ -49,7 +49,7 @@ RSpec.describe Interactify::Dsl::Wrapper do
 
     it "chains the interactors within the organizer" do
       result = interactor_wrapper.wrap_chain
-      expect(result.name).to match(/#{Regexp.quote organizer.name}::Chained\d+\z/)
+      expect(result.name).to match(/#{Regexp.quote organizer.name}::Chained(_\d*)?\z/)
     end
   end
 
@@ -61,7 +61,7 @@ RSpec.describe Interactify::Dsl::Wrapper do
 
       it "wraps the conditional interactor correctly" do
         expect(interactor_wrapper.wrap_conditional.name)
-          .to match(/#{Regexp.quote organizer.name}::IfProc\d+\z/)
+          .to match(/#{Regexp.quote organizer.name}::IfProc(_\d+)?\z/)
       end
     end
 

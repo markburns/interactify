@@ -151,6 +151,74 @@ if Interactify.sidekiq?
         side_effects.reset
       end
     end
+
+    describe "#job_calling" do
+      context "with basic setup" do
+        class self::TestJobCalling
+          include Interactify::Async::Jobable
+          job_calling method_name: :custom_method
+
+          def self.custom_method
+            "method called"
+          end
+        end
+
+        it "creates a job class that can call the specified method" do
+          job_instance = self.class::TestJobCalling::Job.new
+          expect(job_instance.perform).to eq("method called")
+        end
+      end
+
+      context "with custom options and class suffix" do
+        class self::TestJobWithOptions
+          include Interactify::Async::Jobable
+          job_calling method_name: :parameter_method, opts: { queue: "custom_queue" }, klass_suffix: "Custom"
+
+          def self.parameter_method(param)
+            param
+          end
+        end
+
+        it "applies custom options to the job class" do
+          expect(self.class::TestJobWithOptions::JobCustom::JOBABLE_OPTS[:queue]).to eq("custom_queue")
+        end
+
+        it "creates a job class with the specified suffix" do
+          job_instance = self.class::TestJobWithOptions::JobCustom.new
+          expect(job_instance.perform("test")).to eq("test")
+        end
+      end
+
+      context "integration with Sidekiq" do
+        before do
+          allow(Sidekiq::Worker).to receive(:perform_async)
+        end
+
+        class self::TestJobWithSidekiq
+          include Interactify::Async::Jobable
+
+          job_calling method_name: :sidekiq_method
+
+          def self.sidekiq_method
+            "sidekiq method"
+          end
+        end
+
+        it "enqueues job to Sidekiq" do
+          self.class::TestJobWithSidekiq::Job.perform_async
+
+          enqueued = Sidekiq::Job.jobs.last
+
+          expect(enqueued).to match(
+            a_hash_including(
+              "retry" => true,
+              "queue" => "default",
+              "class" => self.class::TestJobWithSidekiq::Job.to_s
+            )
+          )
+        end
+      end
+    end
   end
 end
 # rubocop:enable Naming/MethodParameterName

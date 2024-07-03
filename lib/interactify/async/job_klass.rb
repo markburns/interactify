@@ -51,7 +51,7 @@ module Interactify
       end
 
       def restrict_to_optional_or_keys_from_contract(args)
-        keys = container_klass.expected_keys.map(&:to_s)
+        keys = Array(container_klass.expected_keys).map(&:to_s)
 
         optional = Array(container_klass.optional_attrs).map(&:to_s)
         keys += optional

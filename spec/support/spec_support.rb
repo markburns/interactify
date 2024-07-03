@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
 module SpecSupport
-  include Interactify
+  module EachInteractor
+    include Interactify
+  end
 
   module LoadInteractifyFixtures
     def load_interactify_fixtures(sub_directory)
       files = Dir.glob("./spec/fixtures/integration_app/app/interactors/#{sub_directory}/**/*.rb")
 
       files.each do |file|
-        load file
+        silence_warnings { load file }
       end
     end
   end
