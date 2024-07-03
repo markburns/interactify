@@ -8,7 +8,7 @@ module SpecSupport
       files = Dir.glob("./spec/fixtures/integration_app/app/interactors/#{sub_directory}/**/*.rb")
 
       files.each do |file|
-        load file
+        silence_warnings { load file }
       end
     end
   end

@@ -4,7 +4,9 @@ RSpec.describe "Interactify.each" do
   before do
     files = Dir.glob("./spec/fixtures/integration_app/app/interactors/each/**/*.rb")
     files.each do |file|
-      require file
+      silence_warnings do
+        load file
+      end
     end
   end
 

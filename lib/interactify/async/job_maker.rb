@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "interactify/async/job_klass"
-require "interactify/async/null_job"
 
 module Interactify
   module Async
@@ -23,7 +22,7 @@ module Interactify
         private
 
         def define_job_klass
-          return NullJob if Interactify.sidekiq_missing?
+          return if Interactify.sidekiq_missing?
 
           this = self
 
