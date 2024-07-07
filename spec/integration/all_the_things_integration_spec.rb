@@ -53,24 +53,24 @@ RSpec.describe "Interactify" do
     end
   end
 
-  context 'with anonymous classes in chains' do
+  context "with anonymous classes in chains" do
     self::SomeInteractor = Class.new do |klass|
       include Interactify
-      anonymous_thing = Interactify { context.problem = 'problem happens here' }
+      anonymous_thing = Interactify { context.problem = "problem happens here" }
 
-      A = Interactify { _1.a = 'A' }
-      B = Interactify { _1.b = 'B' }
-      C = Interactify { _1.c = 'C' }
+      klass::A = Interactify { _1.a = "A" }
+      klass::B = Interactify { _1.b = "B" }
+      klass::C = Interactify { _1.c = "C" }
 
       klass::SomeChain = chain(
         anonymous_thing,
-        A,
-        B,
-        C
+        klass::A,
+        klass::B,
+        klass::C
       )
     end
 
-    it 'does not raise an error' do
+    it "does not raise an error" do
       expect { self.class::SomeInteractor::SomeChain.call! }.not_to raise_error
     end
   end
