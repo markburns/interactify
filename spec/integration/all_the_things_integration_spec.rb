@@ -52,4 +52,26 @@ RSpec.describe "Interactify" do
       expect(result.heavily_nested_counter).to eq 256
     end
   end
+
+  context "with anonymous classes in chains" do
+    self::SomeInteractor = Class.new do |klass|
+      include Interactify
+      anonymous_thing = Interactify { context.problem = "problem happens here" }
+
+      klass::A = Interactify { _1.a = "A" }
+      klass::B = Interactify { _1.b = "B" }
+      klass::C = Interactify { _1.c = "C" }
+
+      klass::SomeChain = chain(
+        anonymous_thing,
+        klass::A,
+        klass::B,
+        klass::C
+      )
+    end
+
+    it "does not raise an error" do
+      expect { self.class::SomeInteractor::SomeChain.call! }.not_to raise_error
+    end
+  end
 end
