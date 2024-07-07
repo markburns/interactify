@@ -19,7 +19,7 @@ module Interactify
       end
 
       def name_with_suffix(namespace, prefix, suffix)
-        name = [prefix.to_s, suffix.to_s].compact_blank.join("_")
+        name = [prefix.to_s, suffix.to_s].reject(&:blank?).join("_")
 
         return nil if namespace.const_defined?(name.to_sym)
 
