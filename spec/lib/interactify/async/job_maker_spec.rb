@@ -37,6 +37,7 @@ RSpec.describe Interactify::Async::JobMaker do
 
           expect(job_klass).to be_a(Class)
         end
+
         it "job class includes Sidekiq::Job" do
           job_klass = subject.job_klass
 
@@ -67,6 +68,53 @@ RSpec.describe Interactify::Async::JobMaker do
 
           expect(job_klass.const_defined?(:JOBABLE_METHOD_NAME)).to be true
           expect(job_klass::JOBABLE_METHOD_NAME).to eq(method_name)
+        end
+
+        describe "#cancel! and #cancelled?" do
+          let(:job_klass) { subject.job_klass }
+          let(:jid) { "test-jid" }
+
+          before do
+            allow_any_instance_of(job_klass).to receive(:jid).and_return(jid)
+            Sidekiq.redis { |conn| conn.del("cancelled-#{jid}") } # Cleanup before tests
+          end
+
+          it "sets the cancellation flag in Redis" do
+            job_klass.cancel!(jid)
+
+            result = Sidekiq.redis { |conn| conn.get("cancelled-#{jid}") }
+            expect(result).to eq("1")
+          end
+
+          it "returns true for cancelled? if job is cancelled" do
+            job_klass.cancel!(jid)
+            job_instance = job_klass.new
+
+            expect(job_instance.cancelled?).to be true
+          end
+
+          it "returns false for cancelled? if job is not cancelled" do
+            job_instance = job_klass.new
+
+            expect(job_instance.cancelled?).to be false
+          end
+
+          it "does not perform job logic if cancelled" do
+            job_klass.cancel!(jid)
+            job_instance = job_klass.new
+
+            expect(job_instance.class.module_parent).not_to receive(:call!)
+
+            job_instance.perform
+          end
+
+          it "performs job logic if not cancelled" do
+            job_instance = job_klass.new
+
+            expect(job_instance.class.module_parent).to receive(:call!)
+
+            job_instance.perform
+          end
         end
       end
     end

@@ -44,9 +44,19 @@ module Interactify
             sidekiq_options(opts)
 
             def perform(...)
+              return if cancelled?
+
               self.class.module_parent.send(
                 self.class::JOBABLE_METHOD_NAME, ...
               )
+            end
+
+            def cancelled?
+              Sidekiq.redis { |c| c.exists("cancelled-#{jid}") == 1 }
+            end
+
+            def self.cancel!(jid)
+              Sidekiq.redis { |c| c.set("cancelled-#{jid}", 1, ex: 86_400) }
             end
           end
         end
