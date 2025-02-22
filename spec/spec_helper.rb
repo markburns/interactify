@@ -12,6 +12,7 @@ if Interactify.sidekiq?
 end
 
 Dir.glob("spec/support/**/*.rb").each { |f| require "./#{f}" }
+Dir.glob("lib/**/*_spec.rb").each { |f| require "./#{f}" }
 
 RSpec.configure do |config|
   config.before do
