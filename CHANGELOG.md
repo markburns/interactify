@@ -1,4 +1,5 @@
 ## [Unreleased]
+## [0.6.0] - 2025-03-06
 - Add support for `Interactify.with(queue: 'within_30_seconds', retry: 3)`
 - Fix issue with anonymous classes not being able to be used in chains
 

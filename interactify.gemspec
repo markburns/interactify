@@ -30,11 +30,16 @@ Gem::Specification.new do |spec|
   spec.metadata["source_code_uri"] = "https://github.com/markburns/interactify"
   spec.metadata["changelog_uri"] = "https://github.com/markburns/interactify/blob/main/CHANGELOG.md"
 
-  spec.files = Dir.chdir(__dir__) do
-    `git ls-files -z`.split("\x0").reject do |f|
-      (File.expand_path(f) == __FILE__) ||
-        f.start_with?(*%w[bin/ test/ spec/ features/ .git .circleci appveyor Gemfile])
-    end
+  spec.files = [
+    "lib/**/*.rb",
+    "LICENSE.txt", 
+    "README.md",
+    "CHANGELOG.md"
+  ].map { |glob| Dir[glob] }.flatten.reject do |f| 
+    File.directory?(f) || 
+      f.end_with?("_spec.rb") ||
+      f.start_with?(*%w[bin/ test/ spec/ features/ .git .circleci appveyor Gemfile]) ||
+      File.expand_path(f) == __FILE__
   end
 
   spec.bindir = "exe"
@@ -44,5 +49,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activesupport", ">= 6.0.0"
   spec.add_dependency "interactor"
   spec.add_dependency "interactor-contracts"
+  spec.add_dependency "bigdecimal"
+  spec.add_dependency "base64"
+  spec.add_dependency "mutex_m"
   spec.metadata["rubygems_mfa_required"] = "true"
 end

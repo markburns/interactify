@@ -1,10 +1,13 @@
 PATH
   remote: ..
   specs:
-    interactify (0.6.0.pre.alpha.1)
+    interactify (0.6.0)
       activesupport (>= 6.0.0)
+      base64
+      bigdecimal
       interactor
       interactor-contracts
+      mutex_m
 
 GEM
   remote: https://rubygems.org/

@@ -14,7 +14,8 @@ Style/ClassAndModuleChildren:
     - 'spec/**/*'
 Metrics/BlockLength:
   Exclude: 
-    - 'spec/**/*'
+    - 'spec/**/*_spec.rb'
+    - 'lib/**/*_spec.rb'
     - '*.gemspec'
 Metrics/MethodLength:
   Enabled: false
