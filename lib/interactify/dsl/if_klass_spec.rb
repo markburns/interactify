@@ -50,7 +50,7 @@ RSpec.describe Interactify::Dsl::IfKlass do
     end
 
     context "with a lambda condition" do
-      let(:condition) { -> { _1.some_condition } }
+      let(:condition) { lambda(&:some_condition) }
 
       it "works" do
         klass = subject.klass
@@ -66,7 +66,7 @@ RSpec.describe Interactify::Dsl::IfKlass do
     end
 
     context "with an interactified lambda condition" do
-      let(:condition) { Interactify(-> { _1.some_condition }) }
+      let(:condition) { Interactify(lambda(&:some_condition)) }
 
       it "works" do
         klass = subject.klass

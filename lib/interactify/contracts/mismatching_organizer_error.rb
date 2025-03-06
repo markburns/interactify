@@ -10,7 +10,7 @@ module Interactify
         @organizing = organizing
         @organized_klasses = organized_klasses
 
-        super formatted_message
+        super(formatted_message)
       end
 
       private

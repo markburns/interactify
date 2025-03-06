@@ -107,7 +107,7 @@ module Interactify
       end
 
       def singular_resource_index_name
-        "#{singular_resource_name}_index".to_sym
+        :"#{singular_resource_name}_index"
       end
     end
   end
