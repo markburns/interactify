@@ -27,7 +27,7 @@ module Interactify
       end
 
       def normalize_prefix(prefix:, camelize:)
-        normalized = prefix.to_s.gsub(/::/, "__")
+        normalized = prefix.to_s.gsub("::", "__")
         return normalized unless camelize
 
         normalized.camelize

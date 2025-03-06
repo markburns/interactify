@@ -6,7 +6,7 @@ module Interactify
   module Contracts
     class MismatchingPromiseError < Contracts::Failure
       def initialize(interactor, promising, promised_keys)
-        super <<~MESSAGE.chomp
+        super(<<~MESSAGE.chomp)
           #{interactor} does not promise:
           #{promising.inspect}
 

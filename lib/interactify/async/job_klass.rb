@@ -24,8 +24,8 @@ module Interactify
 
       def attach_call(async_job_klass)
         # e.g. SomeInteractor::AsyncWithSuffix.call(foo: 'bar')
-        async_job_klass.send(:define_singleton_method, :call) do |context|
-          call!(context)
+        async_job_klass.send(:define_singleton_method, :call) do |context = {}|
+          call!(**context)
         end
       end
 
@@ -33,12 +33,19 @@ module Interactify
         this = self
 
         # e.g. SomeInteractor::AsyncWithSuffix.call!(foo: 'bar')
-        async_job_klass.send(:define_singleton_method, :call!) do |context|
+        async_job_klass.send(:define_singleton_method, :call!) do |context = {}|
           # e.g. SomeInteractor::JobWithSuffix
           job_klass = this.container_klass.const_get("Job#{this.klass_suffix}")
 
           # e.g. SomeInteractor::JobWithSuffix.perform_async({foo: 'bar'})
-          job_klass.perform_async(this.args(context))
+          args = this.args(context)
+
+          # Handle empty hash case to avoid issues with double splat operator
+          if args.empty?
+            job_klass.perform_async # Call without arguments for empty payload
+          else
+            job_klass.perform_async(args) # Pass as a single argument, not using double splat
+          end
         end
       end
 

@@ -11,7 +11,7 @@ if ENV["COVERAGE"]
 
   SimpleCov.start do
     add_filter "/spec/"
-    add_filter(/_spec\.rb$/)  # This line excludes all files ending with _spec.rb
+    add_filter(/_spec\.rb$/) # This line excludes all files ending with _spec.rb
 
     add_group "Sidekiq jobs" do |src_file|
       src_file.project_filename =~ %r{lib/interactify/async} && src_file.filename !~ /_spec\.rb/

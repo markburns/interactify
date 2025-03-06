@@ -98,13 +98,11 @@ module Interactify
         end
       end
 
-      # rubocop: disable Naming/BlockForwarding
       def attach_method(name, &block)
         attach do |klass, _this|
           klass.define_method(name, &block)
         end
       end
-      # rubocop: enable Naming/BlockForwarding
 
       def attach
         this = if_builder

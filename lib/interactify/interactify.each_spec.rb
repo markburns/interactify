@@ -48,7 +48,7 @@ RSpec.describe Interactify do
 
       file, line = klass.source_location
       expect(file).to match __FILE__
-      expect(line).to be > 0
+      expect(line).to be_positive
 
       result = klass.call!(things: [1, 2, 3])
       expect(result.a).to eq([1, 2, 3])
