@@ -49,5 +49,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activesupport", ">= 6.0.0"
   spec.add_dependency "interactor"
   spec.add_dependency "interactor-contracts"
+  spec.add_dependency "bigdecimal"
+  spec.add_dependency "base64"
+  spec.add_dependency "mutex_m"
   spec.metadata["rubygems_mfa_required"] = "true"
 end

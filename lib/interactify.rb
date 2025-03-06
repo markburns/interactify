@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "interactor"
+require "bigdecimal"
 require "interactor-contracts"
 require "active_support/all"
 
